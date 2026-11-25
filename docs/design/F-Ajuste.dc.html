@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Ajuste de estoque</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2347D6}a:hover{color:#1A36A8}
+input::placeholder{color:#7A8190}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F4F5F7; color: #16181D; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; display: flex; flex-direction: column">
+  <div style="height: 60px; flex-shrink: 0; padding: 0 12px; display: flex; align-items: center; gap: 4px">
+    <a href="F-Produto.dc.html" aria-label="Voltar" style="width: 44px; height: 44px; border-radius: 12px; color: #16181D; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"></path></svg></a>
+    <div style="display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 18px; font-weight: 800">Conferir estoque</h1><span style="font-size: 12px; color: #5B6270">Pastilha de freio dianteira</span></div>
+  </div>
+
+  <div style="flex-grow: 1; padding: 4px 16px 0; display: flex; flex-direction: column; gap: 12px">
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+      <div style="background: #FFFFFF; border-radius: 22px; padding: 16px; display: flex; flex-direction: column; gap: 6px">
+        <span style="font-size: 13px; font-weight: 600; color: #5B6270">No sistema</span>
+        <span style="font-size: 44px; font-weight: 800; letter-spacing: -1px; color: #9AA1AD; line-height: 1">5</span>
+        <span style="font-size: 13px; color: #5B6270">jogos</span>
+      </div>
+      <div style="background: #FFFFFF; border: 2px solid #2347D6; border-radius: 22px; padding: 14px; display: flex; flex-direction: column; gap: 6px">
+        <span style="font-size: 13px; font-weight: 700; color: #2347D6">Eu contei</span>
+        <span style="font-size: 44px; font-weight: 800; letter-spacing: -1px; line-height: 1">3</span>
+        <div style="display: flex; gap: 6px">
+          <button type="button" aria-label="Menos um" style="flex-grow: 1; height: 36px; border-radius: 10px; border: 0; background: #F4F5F7; color: #16181D; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"></path></svg></button>
+          <button type="button" aria-label="Mais um" style="flex-grow: 1; height: 36px; border-radius: 10px; border: 0; background: #E8EDFD; color: #2347D6; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <div style="background: #FFF1E8; border-radius: 18px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between">
+      <span style="font-size: 14px; font-weight: 600; color: #7C2D12">Diferença</span>
+      <strong style="font-size: 18px; color: #C2410C">−2 jogos</strong>
+    </div>
+
+    <section style="background: #FFFFFF; border-radius: 22px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+      <h2 style="margin: 0; font-size: 15px; font-weight: 800">O que aconteceu? <span style="font-weight: 600; font-size: 13px; color: #5B6270">(obrigatório)</span></h2>
+      <div role="radiogroup" aria-label="Motivo do ajuste" style="display: flex; flex-direction: column; gap: 8px">
+        <button type="button" role="radio" aria-checked="true" style="min-height: 48px; padding: 0 14px; border-radius: 14px; border: 2px solid #2347D6; background: #E8EDFD; color: #16181D; font-family: inherit; font-size: 14px; font-weight: 700; text-align: left; display: flex; align-items: center; gap: 10px">
+          <span style="width: 18px; height: 18px; border-radius: 50%; border: 5px solid #2347D6; box-sizing: border-box; background: #FFFFFF; flex-shrink: 0"></span>Usei e esqueci de registrar</button>
+        <button type="button" role="radio" aria-checked="false" style="min-height: 48px; padding: 0 14px; border-radius: 14px; border: 1.5px solid #E3E6EB; background: #FFFFFF; color: #3A404C; font-family: inherit; font-size: 14px; font-weight: 600; text-align: left; display: flex; align-items: center; gap: 10px">
+          <span style="width: 18px; height: 18px; border-radius: 50%; border: 2px solid #9AA1AD; box-sizing: border-box; flex-shrink: 0"></span>Peça com defeito ou perdida</button>
+        <button type="button" role="radio" aria-checked="false" style="min-height: 48px; padding: 0 14px; border-radius: 14px; border: 1.5px solid #E3E6EB; background: #FFFFFF; color: #3A404C; font-family: inherit; font-size: 14px; font-weight: 600; text-align: left; display: flex; align-items: center; gap: 10px">
+          <span style="width: 18px; height: 18px; border-radius: 50%; border: 2px solid #9AA1AD; box-sizing: border-box; flex-shrink: 0"></span>Registrei errado antes</button>
+      </div>
+      <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #3A404C">Detalhe (opcional)
+        <input type="text" placeholder="Ex.: contagem de 25/11" style="height: 48px; box-sizing: border-box; padding: 0 14px; background: #F4F5F7; border: 1.5px solid #E3E6EB; border-radius: 14px; font-family: inherit; font-size: 15px; color: #16181D; outline: none">
+      </label>
+    </section>
+  </div>
+
+  <div style="padding: 14px 16px 22px; display: flex; flex-direction: column; gap: 8px">
+    <a href="F-Produtos.dc.html" style="height: 58px; border-radius: 18px; background: #2347D6; color: #FFFFFF; text-decoration: none; font-weight: 800; font-size: 17px; display: flex; align-items: center; justify-content: center">Salvar ajuste</a>
+    <span style="text-align: center; font-size: 12px; color: #5B6270">Fica no histórico. Nada é apagado.</span>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

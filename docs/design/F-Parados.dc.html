@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Produtos parados</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2347D6}a:hover{color:#1A36A8}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F4F5F7; color: #16181D; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; display: flex; flex-direction: column">
+  <div style="height: 60px; flex-shrink: 0; padding: 0 12px; display: flex; align-items: center; gap: 4px">
+    <a href="F-Painel.dc.html" aria-label="Voltar" style="width: 44px; height: 44px; border-radius: 12px; color: #16181D; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"></path></svg></a>
+    <h1 style="margin: 0; font-size: 18px; font-weight: 800">Produtos parados</h1>
+  </div>
+
+  <div style="flex-grow: 1; padding: 4px 20px 0; display: flex; flex-direction: column; gap: 14px">
+    <section style="background: #2347D6; color: #FFFFFF; border-radius: 24px; padding: 20px; display: flex; flex-direction: column; gap: 6px">
+      <span style="font-size: 14px; color: #DCE3FB; font-weight: 600">Dinheiro parado na prateleira</span>
+      <span style="font-size: 38px; font-weight: 800; letter-spacing: -1px">R$ 1.275,50</span>
+      <span style="font-size: 14px; color: #DCE3FB">4 produtos sem nenhuma saída há mais de 30 dias</span>
+    </section>
+
+    <div style="display: flex; align-items: center; gap: 8px">
+      <span style="font-size: 14px; font-weight: 600; color: #3A404C">Sem saída há</span>
+      <div role="radiogroup" aria-label="Período" style="display: flex; gap: 6px">
+        <button type="button" role="radio" aria-checked="true" style="height: 36px; padding: 0 14px; border-radius: 18px; border: 0; background: #16181D; color: #FFFFFF; font-family: inherit; font-size: 13px; font-weight: 700">30 dias</button>
+        <button type="button" role="radio" aria-checked="false" style="height: 36px; padding: 0 14px; border-radius: 18px; border: 1.5px solid #E3E6EB; background: #FFFFFF; color: #3A404C; font-family: inherit; font-size: 13px; font-weight: 600">60</button>
+        <button type="button" role="radio" aria-checked="false" style="height: 36px; padding: 0 14px; border-radius: 18px; border: 1.5px solid #E3E6EB; background: #FFFFFF; color: #3A404C; font-family: inherit; font-size: 13px; font-weight: 600">90</button>
+      </div>
+    </div>
+
+    <div style="background: #FFFFFF; border-radius: 20px; display: flex; flex-direction: column">
+      <div style="padding: 14px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #F1F2F5">
+        <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 15px">Correia dentada</strong><span style="font-size: 12px; color: #5B6270">6 un × R$ 89,90 · 47 dias parado</span></span>
+        <strong style="font-size: 16px">R$ 539,40</strong>
+      </div>
+      <div style="padding: 14px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #F1F2F5">
+        <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 15px">Bomba d’água</strong><span style="font-size: 12px; color: #5B6270">2 un × R$ 145,00 · 33 dias parado</span></span>
+        <strong style="font-size: 16px">R$ 290,00</strong>
+      </div>
+      <div style="padding: 14px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #F1F2F5">
+        <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 15px">Aditivo de radiador 1L</strong><span style="font-size: 12px; color: #5B6270">9 un × R$ 24,90 · 62 dias parado</span></span>
+        <strong style="font-size: 16px">R$ 224,10</strong>
+      </div>
+      <div style="padding: 14px 16px; display: flex; align-items: center; gap: 12px">
+        <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 15px">Lâmpada H7 12V</strong><span style="font-size: 12px; color: #5B6270">12 un × R$ 18,50 · 38 dias parado</span></span>
+        <strong style="font-size: 16px">R$ 222,00</strong>
+      </div>
+    </div>
+    <p style="margin: 0; font-size: 12px; line-height: 1.5; color: #5B6270">Valor = saldo × custo unitário. Produtos sem custo cadastrado não entram no total.</p>
+  </div>
+
+  <div style="padding: 14px 20px 22px">
+    <a href="F-Exportar.dc.html" style="height: 54px; border-radius: 16px; background: #FFFFFF; border: 1.5px solid #E3E6EB; color: #16181D; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; font-weight: 700">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v3h16v-3"></path></svg>
+      Baixar esta lista (CSV)
+    </a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

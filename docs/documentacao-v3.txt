@@ -1,0 +1,561 @@
+                 STARTUP CHALLENGE UMC 2026
+                      MESTRES DA WEB
+
+
+
+
+                          ESTOQUECERTO
+
+Sistema de Controle e Gestão Inteligente de Estoque para Oficina Mecânica
+
+                 Documentação do Projeto — Versão 3.0
+
+
+
+
+                                    Segmento de aplicação: Oficina Mecânica
+                                    Estabelecimento participante: Oficina
+                                    Mecânica — cliente entrevistado
+                                    Responsável pelo levantamento: Márcia
+                                    Ortega
+                                    Natureza do documento: Especificação
+                                    acadêmica, funcional e técnica do projeto
+
+
+
+
+                            Mogi das Cruzes
+                        23 de novembro de 2026
+                                          SUMÁRIO
+
+
+1 RESUMO EXECUTIVO . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+
+2 CONTEXTO E PROBLEMA . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+     2.1 O estabelecimento . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+     2.2 Situação atual . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+     2.3 Problema central . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
+
+3 OBJETIVOS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
+     3.1 Objetivo geral . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
+     3.2 Objetivos específicos . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
+
+4 ESCOPO DO MVP . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+     4.1 Incluído no MVP . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+     4.2 Fora do MVP . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+     4.3 Evolução prevista . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+
+5 USUÁRIOS E PREMISSAS DE USO . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+
+6 REQUISITOS FUNCIONAIS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+
+7 REGRAS DE NEGÓCIO . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+
+8 REQUISITOS NÃO FUNCIONAIS . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
+
+9 FLUXOS PRINCIPAIS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
+     9.1 Registro de saída . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
+     9.2 Registro de entrada . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
+     9.3 Alerta de estoque baixo . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
+
+10 ARQUITETURA E TECNOLOGIAS . . . . . . . . . . . . . . . . . . . . . . . . . 10
+
+11 MODELO DE DADOS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10
+
+12 TELAS DO MVP . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10
+
+13 IMPLANTAÇÃO E CARGA INICIAL . . . . . . . . . . . . . . . . . . . . . . . . . 11
+
+14 TESTES E CRITÉRIOS DE ACEITE . . . . . . . . . . . . . . . . . . . . . . . . . 11
+
+15 VALIDAÇÃO COM A OFICINA . . . . . . . . . . . . . . . . . . . . . . . . . . . . 11
+
+16 ESTRATÉGIA DE ADOÇÃO . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12
+17 RISCOS E MITIGAÇÃO . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12
+
+18 SEGURANÇA E PRIVACIDADE . . . . . . . . . . . . . . . . . . . . . . . . . . . 12
+
+19 CRONOGRAMA E ENTREGÁVEIS . . . . . . . . . . . . . . . . . . . . . . . . . 12
+
+20 CONSIDERAÇÕES FINAIS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 13
+
+REFERÊNCIAS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 13
+
+APÊNDICE A — PONTOS A CONFIRMAR COM A OFICINA . . . . . . . . . . . . 14
+
+APÊNDICE B — EXEMPLO DO ALERTA DE 20% . . . . . . . . . . . . . . . . . . 15
+                                                                                             4
+
+
+1 RESUMO EXECUTIVO
+
+
+        O EstoqueCerto é um sistema web responsivo de controle de estoque desenvolvido
+para uma oficina mecânica. Seu objetivo é substituir o controle manual feito em caderno por
+um registro digital de peças, materiais e insumos, com cálculo automático de saldo, histórico
+de movimentações e alertas de estoque baixo.
+        Atualmente, a oficina atualiza o estoque a cada quinze dias, confere os produtos um a
+um e identifica a necessidade de compra por observação visual. Esse processo é trabalhoso,
+sujeito a esquecimentos e já resultou em compra emergencial de um produto por preço acima
+do habitual.
+        O MVP entrega o núcleo operacional necessário para resolver esse problema: cadastro
+de produtos, registro rápido de entradas e saídas, saldo atualizado em tempo real, alertas de
+reposição, listagem de produtos parados e exportação de relatório. A interface é pensada para
+uso em celular e para uma usuária sem experiência anterior com sistemas de estoque.
+        Este documento especifica o escopo, os requisitos, as regras de negócio, a arquitetura,
+o modelo de dados, os critérios de aceite e o cronograma do MVP, servindo de base direta
+para o início do desenvolvimento.
+
+
+2 CONTEXTO E PROBLEMA
+
+
+2.1 O estabelecimento
+
+
+Campo                                             Informação
+Segmento                                          Oficina mecânica
+Entrevistada                                      Márcia Ortega
+Cargo                                             Sócia-proprietária
+Controle atual                                    Manual, em caderno
+Frequência de atualização                         Quinzenal
+Utilização anterior de sistema                    Nunca utilizou
+Principal necessidade                             Aviso de estoque baixo
+Preferência de acesso                             Aplicativo ou interface mobile
+Disposição de pagamento mensal                    R$ 0,00
+
+
+
+2.2 Situação atual
+
+       O levantamento foi realizado por entrevista estruturada com a proprietária. Os
+principais pontos identificados foram:
+                                                                                              5
+
+
+       a) o estoque é registrado em caderno e atualizado quinzenalmente, o que cria intervalo
+           entre a movimentação física e o registro;
+       b) a responsável precisa conferir os produtos e anotar cada retirada para evitar
+           esquecimentos;
+       c) a necessidade de reposição é percebida quando o estoque aparenta estar baixo;
+       d) existem produtos sem movimentação, cujo valor investido pode ser estimado;
+       e) houve compra emergencial de um produto por preço mais alto após a sua falta;
+       f) o tempo informado para o controle é de 20 minutos semanais, dado que precisa ser
+           confirmado, pois a atualização relatada é quinzenal;
+       g) a proprietária deseja ser avisada quando o estoque estiver abaixo de 20% do último
+           abastecimento;
+       h) o uso em celular é considerado desejável, e a prioridade é atualizar rápido e evitar a
+           falta de produtos;
+       i) não há disposição atual de pagamento mensal pelo sistema.
+
+       A entrevista não quantificou perdas financeiras. Por isso, os ganhos esperados com o
+sistema são tratados como hipóteses a serem medidas no piloto.
+
+2.3 Problema central
+
+        A oficina não consegue manter um controle de estoque atualizado porque depende de
+registros manuais, de conferência individual dos produtos e de observação visual para decidir
+compras. Isso dificulta saber o saldo disponível, aumenta o risco de esquecimentos e
+compromete o planejamento de reposição.
+
+
+3 OBJETIVOS
+
+
+3.1 Objetivo geral
+
+       Entregar um MVP funcional de controle de estoque que permita à oficina registrar
+movimentações rapidamente, consultar saldos confiáveis e receber alertas de reposição antes
+que o produto acabe.
+
+3.2 Objetivos específicos
+
+       a) Substituir o caderno por cadastro digital de produtos;
+       b) Registrar entradas e saídas em poucos toques, pelo celular;
+       c) Calcular o saldo automaticamente a partir das movimentações;
+       d) Avisar quando um produto atingir o limite de reposição;
+       e) Preservar o histórico de todas as movimentações;
+       f) Identificar produtos parados e estimar o valor imobilizado neles;
+                                                                                            6
+
+
+       g) Exportar informações básicas em CSV;
+       h) Validar o uso do sistema na rotina da oficina durante um piloto.
+
+
+4 ESCOPO DO MVP
+
+
+4.1 Incluído no MVP
+
+       a) Autenticação por e-mail e senha;
+       b) Cadastro, edição e inativação de produtos e categorias;
+       c) Registro de entradas, saídas e ajustes de estoque;
+       d) Cálculo automático de saldo;
+       e) Estoque mínimo e percentual de alerta configuráveis por produto;
+       f) Alertas de estoque baixo no painel e por e-mail;
+       g) Histórico de movimentações com filtros por produto, tipo e período;
+       h) Listagem de produtos parados e valor imobilizado;
+       i) Exportação de relatório em CSV;
+       j) Importação inicial de produtos por CSV, se a oficina tiver planilha organizada;
+       k) Interface web responsiva, com prioridade para celular.
+
+
+4.2 Fora do MVP
+
+       a) Aplicativo nativo;
+       b) Integração com fornecedores e compras automáticas;
+       c) Alertas por WhatsApp;
+       d) Controle por lote e validade;
+       e) Múltiplos usuários com perfis de acesso;
+       f) Previsão de demanda e assistente de inteligência artificial;
+       g) Controle financeiro e gestão de ordens de serviço.
+
+
+4.3 Evolução prevista
+
+       Após a validação do MVP, as próximas etapas são: painel de indicadores e sugestão de
+quantidade de reposição com base no consumo médio; alertas por WhatsApp e múltiplos
+usuários; e, havendo histórico suficiente, previsão de demanda. Essas funcionalidades
+dependem dos dados coletados no uso real e não fazem parte da entrega atual.
+                                                                                             7
+
+
+5 USUÁRIOS E PREMISSAS DE USO
+
+
+        O MVP atende a um único perfil: a proprietária da oficina, que cadastra produtos,
+registra movimentações e consulta alertas e relatórios. Ela não possui experiência anterior com
+sistemas de estoque e deve usar o sistema principalmente pelo celular, durante a rotina da
+oficina.
+        Premissas adotadas no projeto:
+        a) o sistema atende uma única oficina, com um único usuário no MVP;
+        b) o saldo inicial é definido por uma conferência física no início do uso;
+        c) as saídas são registradas por quem retira a peça, no momento da retirada ou logo
+            depois;
+        d) o acesso à internet está disponível no local de uso.
+
+
+6 REQUISITOS FUNCIONAIS
+
+
+Código      Requisito                                                           Prioridade
+RF01        Autenticar usuária por e-mail e senha                               Essencial
+RF02        Cadastrar, editar e inativar produtos                               Essencial
+RF03        Cadastrar e editar categorias                                       Essencial
+RF04        Registrar entrada de produtos                                       Essencial
+RF05        Registrar saída com motivo                                          Essencial
+RF06        Registrar ajuste de estoque com justificativa                       Essencial
+RF07        Consultar saldo atual por produto                                   Essencial
+RF08        Configurar estoque mínimo e percentual de alerta                    Essencial
+RF09        Exibir e enviar por e-mail alertas de estoque baixo                 Essencial
+RF10        Consultar histórico de movimentações com filtros                    Essencial
+RF11        Listar produtos parados e valor imobilizado                         Essencial
+RF12        Exportar relatório de estoque e movimentações em CSV                Essencial
+RF13        Importar produtos por CSV                                           Desejável
+
+
+
+7 REGRAS DE NEGÓCIO
+
+
+RN01 — Cálculo do saldo
+
+      O saldo de cada produto é a soma das entradas menos a soma das saídas, considerando
+também os ajustes. O saldo não é digitado diretamente: é sempre derivado das
+movimentações.
+                                                                                            8
+
+
+RN02 — Bloqueio de saldo negativo
+
+       O sistema não permite registrar uma saída maior que o saldo disponível.
+
+RN03 — Histórico imutável
+
+        Movimentações não podem ser editadas nem apagadas. Correções são feitas por meio
+de ajuste de estoque com justificativa, preservando o histórico.
+
+RN04 — Alerta de estoque baixo
+
+       Um alerta é gerado quando o saldo do produto fica menor ou igual ao seu limite de
+reposição. O limite é o maior valor entre o estoque mínimo absoluto, quando cadastrado, e o
+percentual de alerta aplicado sobre a quantidade da última entrada.
+
+RN05 — Percentual de alerta
+       O percentual padrão é 20% da quantidade da última entrada, conforme a preferência da
+proprietária, e pode ser alterado por produto. Exemplo: última entrada de 100 unidades e saldo
+de 18 unidades geram alerta, pois o limite é de 20 unidades (Apêndice B).
+
+RN06 — Controle de repetição de alertas
+
+        Enquanto o saldo permanecer abaixo do limite, o produto mantém um único alerta
+ativo. O alerta é encerrado quando uma entrada elevar o saldo acima do limite, e um novo
+alerta só é gerado se o saldo voltar a cair.
+
+RN07 — Produtos parados
+
+       Um produto é considerado parado quando tem saldo positivo e nenhuma saída no
+período configurado. O período padrão é de 30 dias e pode ser alterado.
+
+RN08 — Valor imobilizado
+
+       O valor estimado em estoque é calculado por:
+
+                    Valor imobilizado = saldo disponível × custo unitário
+
+       O valor só é calculado para produtos com custo unitário cadastrado.
+
+RN09 — Inativação de produtos
+
+       Produtos com movimentações não podem ser excluídos. Eles são inativados, deixam
+de aparecer nas listas de registro e permanecem no histórico.
+
+RN10 — Integridade dos registros
+
+       Cada movimentação e a atualização do saldo correspondente ocorrem na mesma
+transação. Se uma etapa falhar, nada é gravado.
+                                                                                                         9
+
+
+8 REQUISITOS NÃO FUNCIONAIS
+
+
+Código     Requisito          Critério
+RNF01      Usabilidade        Registro de saída em até 3 interações a partir do painel
+RNF02      Desempenho         Consultas em até 2 segundos em 95% das requisições, com até 500 produtos
+RNF03      Compatibilidade    Interface responsiva em celular e desktop
+RNF04      Segurança          Senhas com hash e comunicação por HTTPS
+RNF05      Privacidade        Coleta mínima de dados pessoais, conforme a LGPD
+RNF06      Manutenibilidade   Código versionado no GitHub e documentado
+RNF07      Continuidade       Backup diário do banco de dados
+
+
+
+9 FLUXOS PRINCIPAIS
+
+9.1 Registro de saída
+
+         a) A usuária acessa o painel e seleciona o produto;
+         b) Informa a quantidade e o motivo (consumo, perda ou outro);
+         c) A API valida a quantidade contra o saldo (RN02);
+         d) O sistema grava a movimentação e atualiza o saldo na mesma transação;
+         e) O sistema verifica o limite de reposição (RN04) e gera o alerta, se necessário;
+         f) A tela exibe o novo saldo como confirmação.
+
+
+9.2 Registro de entrada
+
+         a) A usuária seleciona o produto e informa quantidade, custo e fornecedor, este último
+             opcional;
+         b) O sistema grava a entrada e atualiza o saldo;
+         c) Se havia alerta ativo e o saldo superou o limite, o alerta é encerrado (RN06).
+
+
+9.3 Alerta de estoque baixo
+
+         a) O alerta é exibido no painel, em destaque;
+         b) Uma mensagem é enviada por e-mail com o nome do produto, o saldo atual e o
+             limite;
+         c) A lista de alertas ativos permite consultar quais produtos precisam de reposição.
+                                                                                                                  10
+
+
+10 ARQUITETURA E TECNOLOGIAS
+
+
+Camada              Tecnologia                      Responsabilidade
+Front-end           React                           Telas, formulários e painel, com layout responsivo
+Back-end            Python com FastAPI              API, autenticação e regras de negócio
+Banco de dados      PostgreSQL                      Produtos, movimentações, alertas e usuários
+Notificações        E-mail                          Envio dos alertas de estoque baixo
+Hospedagem          Computação em nuvem             Disponibilidade e acesso remoto
+Versionamento       Git e GitHub                    Controle de versões e colaboração
+
+       O front-end consome a API por HTTPS. As regras de negócio ficam exclusivamente
+no back-end, de modo que o saldo e os alertas sejam calculados sempre da mesma forma.
+
+11 MODELO DE DADOS
+
+
+      O saldo não é armazenado no produto, mas calculado a partir das movimentações
+(RN01). As entidades do MVP são as seguintes.
+
+Entidade         Principais campos
+Usuário          id, nome, e-mail, senha (hash), data de criação
+Categoria        id, nome
+Produto          id, nome, código ou referência, categoria, unidade de medida, custo unitário, estoque mínimo,
+                 percentual de alerta, localização, observações, ativo
+Movimentação     id, produto, tipo (entrada, saída ou ajuste), quantidade, data e hora, motivo, custo unitário,
+                 fornecedor, usuário
+Alerta           id, produto, saldo no momento, limite, data de criação, situação (ativo ou encerrado)
+
+
+
+12 TELAS DO MVP
+
+
+         a) Login;
+         b) Painel: alertas ativos, atalhos para entrada e saída e resumo do estoque;
+         c) Lista de produtos com saldo e busca;
+         d) Cadastro e edição de produto;
+         e) Registro de entrada e de saída, em formulários curtos;
+         f) Ajuste de estoque;
+         g) Histórico de movimentações com filtros;
+         h) Produtos parados e valor imobilizado;
+         i) Exportação de relatórios.
+                                                                                               11
+
+
+13 IMPLANTAÇÃO E CARGA INICIAL
+
+
+        A implantação na oficina é gradual, para não interferir na rotina. As etapas são:
+        a) Levantar os produtos existentes e organizar as categorias;
+        b) Fazer a conferência física inicial;
+        c) Cadastrar os itens, com custo e limites de reposição;
+        d) Registrar o saldo inicial como ajuste de inventário;
+        e) Orientar a usuária e acompanhar as primeiras movimentações.
+
+       Não serão criadas movimentações históricas fictícias. Se a oficina tiver uma planilha
+organizada, os produtos poderão ser importados por CSV.
+
+
+14 TESTES E CRITÉRIOS DE ACEITE
+
+        O MVP é considerado aceito quando todos os critérios abaixo forem verificados:
+        a) o saldo de cada produto é igual à soma das entradas menos as saídas e os ajustes;
+        b) uma saída maior que o saldo é recusada com mensagem clara;
+        c) uma saída é registrada em até 3 interações a partir do painel;
+        d) o alerta é gerado quando o saldo atinge o limite e não é duplicado;
+        e) o alerta é encerrado quando uma entrada eleva o saldo acima do limite;
+        f) movimentações não podem ser editadas nem excluídas;
+        g) produtos parados e valor imobilizado são listados corretamente;
+        h) o CSV exportado reflete o estoque e as movimentações exibidos na tela;
+        i) as consultas respondem em até 2 segundos com até 500 produtos;
+        j) a interface é utilizável em celular, sem rolagem horizontal.
+
+
+15 VALIDAÇÃO COM A OFICINA
+
+
+      Durante o piloto serão registrados os indicadores abaixo, que definirão as metas
+numéricas das etapas seguintes.
+
+Indicador                        Objetivo de avaliação
+Tempo de registro                Verificar se a movimentação é registrada rapidamente
+Completude dos registros         Avaliar se as saídas estão sendo registradas
+Divergência de estoque           Comparar o saldo digital com a contagem física
+Utilidade dos alertas            Verificar se os avisos antecipam a reposição
+Uso recorrente                   Avaliar se o sistema entra na rotina da oficina
+Satisfação da usuária            Registrar a percepção de facilidade e de benefício
+                                                                                                        12
+
+
+       A aprovação verbal não será considerada prova suficiente de eficácia: a validação deve
+se basear em registros de uso e na comparação com a contagem física.
+
+
+16 ESTRATÉGIA DE ADOÇÃO
+
+
+        A proprietária informou que, no momento, não pretende pagar mensalmente pelo
+sistema. Por isso, o primeiro uso será um piloto gratuito com implantação assistida. Ao final
+do piloto, serão levantados o valor percebido e as barreiras de adoção, para definir um modelo
+de cobrança adequado à realidade da oficina.
+
+
+17 RISCOS E MITIGAÇÃO
+
+
+Risco                           Impacto                     Mitigação
+Saídas não registradas          Saldo incorreto             Formulário rápido e orientação de uso
+Resistência à mudança           Baixa adoção                Implantação assistida
+Dados iniciais incompletos      Alertas imprecisos          Conferência física inicial
+Regra de 20% mal interpretada   Alerta inadequado           Confirmar com a proprietária (Apêndice A)
+Baixa disposição de pagamento   Dificuldade comercial       Piloto gratuito e avaliação de valor
+Falha de conectividade          Interrupção de uso          Avaliar modo offline em etapa futura
+Complexidade excessiva          Dificuldade de utilização   Manter o MVP enxuto
+
+
+
+18 SEGURANÇA E PRIVACIDADE
+
+
+       O sistema adota autenticação segura, senhas armazenadas com hash, comunicação por
+HTTPS, backup diário e procedimento de recuperação. Os dados coletados limitam-se ao
+necessário para o controle de estoque, em conformidade com a Lei Geral de Proteção de
+Dados (LGPD).
+
+
+19 CRONOGRAMA E ENTREGÁVEIS
+
+
+       A entrega do MVP está prevista para 25/11/2026 e a apresentação final para
+27/11/2026.
+                                                                                           13
+
+
+Etapa                       Atividades                           Entregável
+Levantamento                Entrevista e diagnóstico             Requisitos documentados
+Modelagem                   Dados e regras de negócio            Modelo de dados
+Prototipação                Interface e fluxos de uso            Protótipo
+Desenvolvimento MVP         Cadastro, movimentação e alertas     Sistema funcional
+Testes                      Regras de negócio e usabilidade      Evidências de teste
+Piloto                      Uso na oficina                       Feedback e registros
+Apresentação                Demonstração do produto              MVP e apresentação
+
+
+
+20 CONSIDERAÇÕES FINAIS
+
+        O EstoqueCerto parte de um problema concreto da oficina: o controle manual e a
+reposição baseada em observação visual. O MVP concentra-se no que resolve esse problema:
+registro rápido, saldo confiável e aviso antecipado de falta. Com o escopo, os requisitos e os
+critérios de aceite definidos neste documento, o desenvolvimento pode ser iniciado, e os dados
+do piloto orientarão as etapas seguintes.
+
+
+                                         REFERÊNCIAS
+
+
+BRASIL. Lei nº 13.709, de 14 de agosto de 2018. Lei Geral de Proteção de Dados Pessoais
+(LGPD). Brasília, DF, 2018.
+
+MESTRES DA WEB; UNIVERSIDADE DE MOGI DAS CRUZES. Startup Challenge UMC
+2026: regras, trilhas, critérios de avaliação e cronograma. 2026.
+
+ORTEGA, Márcia. Entrevista de levantamento de requisitos: controle de estoque — oficina
+mecânica. 2026. Documento de entrevista fornecido pela equipe.
+                                                                                        14
+
+
+            APÊNDICE A — PONTOS A CONFIRMAR COM A OFICINA
+
+
+        Os pontos abaixo não alteram o escopo do MVP, mas devem ser confirmados para
+ajustar a configuração do sistema:
+        a) O significado exato do limite de 20% do último abastecimento, pois o MVP adota a
+            interpretação descrita na RN05;
+        b) Se o alerta deve aparecer apenas no painel e no e-mail ou também em outro canal;
+        c) Quais categorias de peças e materiais serão cadastradas inicialmente;
+        d) Se os produtos possuem código ou referência do fornecedor;
+        e) Se há necessidade de registrar a localização física dos produtos;
+        f) Se os 20 minutos informados correspondem ao controle semanal ou a cada
+            atualização quinzenal;
+        g) Quais produtos são essenciais para a operação;
+        h) Se existe planilha ou lista inicial de estoque para importação.
+                                                                                              15
+
+
+                    APÊNDICE B — EXEMPLO DO ALERTA DE 20%
+
+
+Informação                                                             Exemplo
+Quantidade recebida no último abastecimento                            100 unidades
+Limite de reposição (20%)                                              20 unidades
+Saldo atual                                                            18 unidades
+Situação                                                               Alerta ativo
+
+       Como o saldo atual é menor ou igual ao limite, o sistema gera o alerta de reposição.
+

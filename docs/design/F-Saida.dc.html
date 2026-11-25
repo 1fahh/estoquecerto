@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Registrar saída</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2347D6}a:hover{color:#1A36A8}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #7E828C; color: #16181D; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; display: flex; flex-direction: column">
+  <div aria-hidden="true" style="flex-grow: 1; padding: 22px 20px; display: flex; flex-direction: column; gap: 12px; opacity: 0.35">
+    <div style="height: 52px"></div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+      <div style="height: 150px; border-radius: 22px; background: #2347D6"></div>
+      <div style="height: 150px; border-radius: 22px; background: #FFFFFF"></div>
+    </div>
+    <div style="height: 220px; border-radius: 22px; background: #FFFFFF"></div>
+  </div>
+
+  <div role="dialog" aria-label="Saída rápida" style="background: #FFFFFF; border-radius: 28px 28px 0 0; padding: 10px 20px 22px; display: flex; flex-direction: column; gap: 16px">
+    <div style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #D5D9E0"></div>
+    <div style="display: flex; align-items: center; gap: 12px">
+      <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px">
+        <span style="font-size: 12px; font-weight: 700; color: #2347D6; text-transform: uppercase; letter-spacing: 0.6px">Saída rápida</span>
+        <strong style="font-size: 18px">Óleo 5W30 sintético 1L</strong>
+        <span style="font-size: 13px; color: #5B6270">Tem 22 L</span>
+      </span>
+      <a href="F-Painel.dc.html" aria-label="Fechar" style="width: 40px; height: 40px; border-radius: 50%; background: #F4F5F7; color: #3A404C; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></a>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <span style="font-size: 14px; font-weight: 600; color: #3A404C">Quantos litros?</span>
+      <div role="radiogroup" aria-label="Quantidade" style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px">
+        <button type="button" role="radio" aria-checked="false" style="height: 56px; border-radius: 16px; border: 1.5px solid #E3E6EB; background: #FFFFFF; font-family: inherit; font-size: 20px; font-weight: 700; color: #16181D">1</button>
+        <button type="button" role="radio" aria-checked="false" style="height: 56px; border-radius: 16px; border: 1.5px solid #E3E6EB; background: #FFFFFF; font-family: inherit; font-size: 20px; font-weight: 700; color: #16181D">2</button>
+        <button type="button" role="radio" aria-checked="false" style="height: 56px; border-radius: 16px; border: 1.5px solid #E3E6EB; background: #FFFFFF; font-family: inherit; font-size: 20px; font-weight: 700; color: #16181D">3</button>
+        <button type="button" role="radio" aria-checked="true" style="height: 56px; border-radius: 16px; border: 0; background: #2347D6; font-family: inherit; font-size: 20px; font-weight: 800; color: #FFFFFF">4</button>
+        <button type="button" role="radio" aria-checked="false" style="height: 56px; border-radius: 16px; border: 1.5px solid #E3E6EB; background: #FFFFFF; font-family: inherit; font-size: 20px; font-weight: 700; color: #16181D">5</button>
+        <button type="button" aria-label="Outra quantidade" style="height: 56px; border-radius: 16px; border: 1.5px dashed #9AA1AD; background: #FFFFFF; font-family: inherit; font-size: 13px; font-weight: 700; color: #2347D6">Outra</button>
+      </div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
+      <span style="font-size: 14px; font-weight: 600; color: #3A404C; margin-right: 2px">Motivo</span>
+      <button type="button" aria-pressed="true" style="height: 36px; padding: 0 14px; border-radius: 18px; border: 0; background: #16181D; color: #FFFFFF; font-family: inherit; font-size: 13px; font-weight: 700">Consumo</button>
+      <button type="button" aria-pressed="false" style="height: 36px; padding: 0 14px; border-radius: 18px; border: 1.5px solid #E3E6EB; background: #FFFFFF; color: #3A404C; font-family: inherit; font-size: 13px; font-weight: 600">Perda</button>
+      <button type="button" aria-pressed="false" style="height: 36px; padding: 0 14px; border-radius: 18px; border: 1.5px solid #E3E6EB; background: #FFFFFF; color: #3A404C; font-family: inherit; font-size: 13px; font-weight: 600">Outro</button>
+    </div>
+
+    <a href="F-Painel.dc.html" style="height: 60px; border-radius: 18px; background: #2347D6; color: #FFFFFF; text-decoration: none; font-weight: 800; font-size: 18px; display: flex; align-items: center; justify-content: center">Tirar 4 L do estoque</a>
+    <p style="margin: -6px 0 0; text-align: center; font-size: 13px; line-height: 1.45; color: #5B6270">Ficam <strong style="color: #C2410C">18 L</strong> — abaixo do limite (20 L), então o alerta será ligado.</p>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

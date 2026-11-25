@@ -1,0 +1,159 @@
+.saida-cabecalho {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.saida-titulo {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 2px;
+  min-width: 0;
+}
+
+.saida-rotulo {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.saida-produto {
+  font-size: 18px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.saida-fechar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--text-2);
+  cursor: pointer;
+}
+
+.saida-bloco {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.saida-quantidades {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.saida-quantidades button {
+  min-height: 56px;
+  min-width: 0;
+  padding: 0;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-btn);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.saida-quantidades button[aria-checked='true'] {
+  border: 0;
+  background: var(--primary);
+  color: #FFFFFF;
+  font-weight: 800;
+}
+
+.saida-quantidades .saida-outra {
+  border-style: dashed;
+  border-color: #9AA1AD;
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.saida-quantidades .saida-outra[aria-checked='true'] {
+  border: 1.5px solid var(--primary);
+  background: var(--primary-soft);
+}
+
+.saida-entrada-outra {
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-ctl);
+  background: var(--surface);
+  font-size: 18px;
+  font-weight: 700;
+  outline: none;
+  min-width: 0;
+}
+
+.saida-entrada-outra:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+
+.saida-motivos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.saida-motivos .campo-rotulo {
+  margin-right: 2px;
+}
+
+.saida-motivos button {
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 22px;
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.saida-motivos button[aria-pressed='true'] {
+  border: 0;
+  background: var(--text);
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+.saida-previa {
+  margin-top: -6px;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.saida-previa-alerta {
+  color: var(--alert);
+}
+
+.saida-confirmar {
+  width: 100%;
+  min-height: 60px;
+  border-radius: 18px;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.saida-trocar {
+  align-self: center;
+}

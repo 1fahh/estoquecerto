@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Registrar entrada</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2347D6}a:hover{color:#1A36A8}
+input::placeholder{color:#7A8190}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F4F5F7; color: #16181D; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; display: flex; flex-direction: column">
+  <div style="height: 60px; flex-shrink: 0; padding: 0 12px; display: flex; align-items: center; gap: 4px">
+    <a href="F-Painel.dc.html" aria-label="Voltar" style="width: 44px; height: 44px; border-radius: 12px; color: #16181D; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"></path></svg></a>
+    <h1 style="margin: 0; font-size: 18px; font-weight: 800">Registrar entrada</h1>
+  </div>
+
+  <form style="flex-grow: 1; padding: 4px 20px 0; display: flex; flex-direction: column; gap: 14px">
+    <div style="background: #FFFFFF; border-radius: 20px; padding: 14px 16px; display: flex; align-items: center; gap: 12px">
+      <span style="width: 44px; height: 44px; border-radius: 14px; background: #E8EDFD; color: #2347D6; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8 12 3 3 8v8l9 5 9-5V8z"></path><path d="M3 8l9 5 9-5M12 13v8"></path></svg>
+      </span>
+      <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 16px">Filtro de óleo FO-140</strong><span style="font-size: 13px; color: #C2410C; font-weight: 600">Tem 4 un · em alerta</span></span>
+      <button type="button" style="height: 40px; padding: 0 12px; border: 0; border-radius: 12px; background: #F4F5F7; color: #2347D6; font-family: inherit; font-size: 13px; font-weight: 700">Trocar</button>
+    </div>
+
+    <div style="background: #FFFFFF; border-radius: 24px; padding: 18px 16px; display: flex; flex-direction: column; align-items: center; gap: 14px">
+      <span style="font-size: 14px; font-weight: 600; color: #3A404C">Quantas unidades chegaram?</span>
+      <div style="display: flex; align-items: center; gap: 20px">
+        <button type="button" aria-label="Diminuir" style="width: 60px; height: 60px; border-radius: 18px; border: 0; background: #F4F5F7; color: #16181D; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"></path></svg></button>
+        <output style="min-width: 96px; text-align: center; font-size: 60px; font-weight: 800; letter-spacing: -2px; line-height: 1">30</output>
+        <button type="button" aria-label="Aumentar" style="width: 60px; height: 60px; border-radius: 18px; border: 0; background: #2347D6; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+      <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600; color: #3A404C">Custo por unidade
+        <input type="text" inputmode="decimal" value="R$ 21,90" style="height: 54px; box-sizing: border-box; padding: 0 14px; background: #FFFFFF; border: 2px solid #2347D6; border-radius: 14px; font-family: inherit; font-size: 17px; font-weight: 700; color: #16181D; outline: none; min-width: 0">
+      </label>
+      <div style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600; color: #3A404C">Total da compra
+        <span style="height: 54px; box-sizing: border-box; padding: 0 14px; background: #EDEFF2; border-radius: 14px; display: flex; align-items: center; font-size: 17px; font-weight: 800; color: #16181D">R$ 657,00</span>
+      </div>
+    </div>
+    <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600; color: #3A404C"><span>Fornecedor <span style="font-weight: 500; color: #5B6270">(opcional)</span></span>
+      <input type="text" value="Distribuidora Central" style="height: 54px; box-sizing: border-box; padding: 0 14px; background: #FFFFFF; border: 1.5px solid #E3E6EB; border-radius: 14px; font-family: inherit; font-size: 16px; color: #16181D; outline: none">
+    </label>
+
+    <div style="background: #EAF7EE; border-radius: 16px; padding: 12px 14px; display: flex; gap: 10px; align-items: flex-start">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><path d="m5 12 5 5 9-10"></path></svg>
+      <span style="font-size: 14px; line-height: 1.45; color: #14532D">Saldo vai para <strong>34 un</strong>. O alerta deste produto será encerrado.</span>
+    </div>
+  </form>
+
+  <div style="padding: 14px 20px 22px">
+    <a href="F-Painel.dc.html" style="height: 60px; border-radius: 18px; background: #2347D6; color: #FFFFFF; text-decoration: none; font-weight: 800; font-size: 17px; display: flex; align-items: center; justify-content: center">Registrar entrada de 30 un</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

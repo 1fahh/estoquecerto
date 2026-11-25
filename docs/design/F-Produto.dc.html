@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Editar produto</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2347D6}a:hover{color:#1A36A8}
+input::placeholder{color:#7A8190}
+</style>
+</helmet>
+<div style="width: 390px; height: 1020px; box-sizing: border-box; background: #F4F5F7; color: #16181D; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; display: flex; flex-direction: column">
+  <div style="height: 60px; flex-shrink: 0; padding: 0 12px; display: flex; align-items: center; gap: 4px">
+    <a href="F-Produtos.dc.html" aria-label="Voltar" style="width: 44px; height: 44px; border-radius: 12px; color: #16181D; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"></path></svg></a>
+    <h1 style="margin: 0; font-size: 18px; font-weight: 800">Óleo 5W30 sintético 1L</h1>
+  </div>
+
+  <form style="flex-grow: 1; padding: 0 16px; display: flex; flex-direction: column; gap: 12px">
+    <section style="background: #FFFFFF; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+      <h2 style="margin: 0; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 800"><span style="width: 26px; height: 26px; border-radius: 50%; background: #E8EDFD; color: #2347D6; font-size: 13px; display: flex; align-items: center; justify-content: center">1</span>O que é</h2>
+      <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #3A404C">Nome
+        <input type="text" value="Óleo 5W30 sintético 1L" style="height: 50px; box-sizing: border-box; padding: 0 14px; background: #F4F5F7; border: 1.5px solid #E3E6EB; border-radius: 14px; font-family: inherit; font-size: 16px; color: #16181D; outline: none">
+      </label>
+      <span style="font-size: 13px; font-weight: 600; color: #3A404C">Categoria</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: -4px">
+        <button type="button" aria-pressed="true" style="height: 36px; padding: 0 14px; border-radius: 18px; border: 0; background: #2347D6; color: #FFFFFF; font-family: inherit; font-size: 13px; font-weight: 700">Lubrificantes</button>
+        <button type="button" aria-pressed="false" style="height: 36px; padding: 0 14px; border-radius: 18px; border: 1.5px solid #E3E6EB; background: #FFFFFF; color: #3A404C; font-family: inherit; font-size: 13px; font-weight: 600">Filtros</button>
+        <button type="button" aria-pressed="false" style="height: 36px; padding: 0 14px; border-radius: 18px; border: 1.5px solid #E3E6EB; background: #FFFFFF; color: #3A404C; font-family: inherit; font-size: 13px; font-weight: 600">Freios</button>
+        <button type="button" aria-pressed="false" style="height: 36px; padding: 0 14px; border-radius: 18px; border: 1.5px solid #E3E6EB; background: #FFFFFF; color: #3A404C; font-family: inherit; font-size: 13px; font-weight: 600">Ignição</button>
+        <button type="button" style="height: 36px; padding: 0 12px; border-radius: 18px; border: 1.5px dashed #9AA1AD; background: #FFFFFF; color: #2347D6; font-family: inherit; font-size: 13px; font-weight: 700">+ Nova</button>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+        <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #3A404C">Unidade
+          <select style="height: 50px; box-sizing: border-box; padding: 0 10px; background: #F4F5F7; border: 1.5px solid #E3E6EB; border-radius: 14px; font-family: inherit; font-size: 15px; color: #16181D; min-width: 0"><option>Litro (L)</option></select>
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #3A404C"><span>Código <span style="font-weight: 500; color: #5B6270">(opcional)</span></span>
+          <input type="text" value="OL-5W30" style="height: 50px; box-sizing: border-box; padding: 0 14px; background: #F4F5F7; border: 1.5px solid #E3E6EB; border-radius: 14px; font-family: inherit; font-size: 15px; color: #16181D; outline: none; min-width: 0">
+        </label>
+      </div>
+    </section>
+
+    <section style="background: #FFFFFF; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+      <h2 style="margin: 0; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 800"><span style="width: 26px; height: 26px; border-radius: 50%; background: #E8EDFD; color: #2347D6; font-size: 13px; display: flex; align-items: center; justify-content: center">2</span>Quanto custa e onde fica</h2>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+        <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #3A404C">Custo por L
+          <input type="text" inputmode="decimal" value="R$ 38,90" style="height: 50px; box-sizing: border-box; padding: 0 14px; background: #F4F5F7; border: 1.5px solid #E3E6EB; border-radius: 14px; font-family: inherit; font-size: 15px; color: #16181D; outline: none; min-width: 0">
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #3A404C">Localização
+          <input type="text" value="Prateleira A1" style="height: 50px; box-sizing: border-box; padding: 0 14px; background: #F4F5F7; border: 1.5px solid #E3E6EB; border-radius: 14px; font-family: inherit; font-size: 15px; color: #16181D; outline: none; min-width: 0">
+        </label>
+      </div>
+    </section>
+
+    <section style="background: #FFFFFF; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+      <h2 style="margin: 0; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 800"><span style="width: 26px; height: 26px; border-radius: 50%; background: #FFF1E8; color: #C2410C; font-size: 13px; display: flex; align-items: center; justify-content: center">3</span>Quando me avisar</h2>
+      <span style="font-size: 13px; font-weight: 600; color: #3A404C">Quando sobrar menos de</span>
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: -4px">
+        <button type="button" aria-pressed="false" style="height: 48px; border-radius: 14px; border: 1.5px solid #E3E6EB; background: #FFFFFF; color: #3A404C; font-family: inherit; font-size: 15px; font-weight: 700">10%</button>
+        <button type="button" aria-pressed="true" style="height: 48px; border-radius: 14px; border: 0; background: #2347D6; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 800">20%</button>
+        <button type="button" aria-pressed="false" style="height: 48px; border-radius: 14px; border: 1.5px solid #E3E6EB; background: #FFFFFF; color: #3A404C; font-family: inherit; font-size: 15px; font-weight: 700">30%</button>
+        <button type="button" aria-pressed="false" style="height: 48px; border-radius: 14px; border: 1.5px solid #E3E6EB; background: #FFFFFF; color: #3A404C; font-family: inherit; font-size: 14px; font-weight: 700">Outro</button>
+      </div>
+      <label style="display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 13px; font-weight: 600; color: #3A404C">Nunca menos que (mínimo fixo)
+        <input type="text" inputmode="numeric" placeholder="—" style="width: 84px; height: 46px; box-sizing: border-box; padding: 0 12px; background: #F4F5F7; border: 1.5px solid #E3E6EB; border-radius: 12px; font-family: inherit; font-size: 15px; color: #16181D; outline: none; text-align: center">
+      </label>
+      <div style="background: #FFF1E8; border-radius: 14px; padding: 12px 14px; font-size: 14px; line-height: 1.5; color: #7C2D12">
+        Você comprou <strong>100 L</strong> da última vez. O aviso chega quando restarem <strong>20 L</strong> — hoje há 18 L, então este produto já está em alerta.
+      </div>
+    </section>
+  </form>
+
+  <div style="padding: 14px 16px 22px; display: flex; flex-direction: column; gap: 6px">
+    <a href="F-Produtos.dc.html" style="height: 56px; border-radius: 16px; background: #2347D6; color: #FFFFFF; text-decoration: none; font-weight: 700; font-size: 16px; display: flex; align-items: center; justify-content: center">Salvar</a>
+    <div style="display: flex; justify-content: space-between; align-items: center">
+      <a href="F-Ajuste.dc.html" style="height: 44px; padding: 0 4px; display: flex; align-items: center; font-size: 14px; font-weight: 700; text-decoration: none">Conferir saldo (contagem)</a>
+      <button type="button" style="height: 44px; border: 0; background: none; color: #3A404C; font-family: inherit; font-size: 14px; font-weight: 600">Inativar produto</button>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1020}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

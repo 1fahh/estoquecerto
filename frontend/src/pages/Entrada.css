@@ -1,0 +1,192 @@
+.entrada {
+  gap: 12px;
+}
+
+.entrada-titulo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.entrada-cartao {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.entrada-produto {
+  font-size: 16px;
+  overflow-wrap: anywhere;
+}
+
+.entrada-comparacao {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+}
+
+.entrada-caixa {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding: 12px;
+  border-radius: var(--radius-btn);
+}
+
+.entrada-antes {
+  background: var(--alert-soft);
+}
+
+.entrada-depois {
+  background: var(--ok-soft);
+}
+
+.entrada-caixa-rotulo {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.entrada-antes .entrada-caixa-rotulo {
+  color: var(--alert-ink-2);
+}
+
+.entrada-depois .entrada-caixa-rotulo {
+  color: #166534;
+}
+
+.entrada-caixa-valor {
+  font-size: 24px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.entrada-antes .entrada-caixa-valor {
+  color: var(--alert);
+}
+
+.entrada-depois .entrada-caixa-valor {
+  color: var(--ok);
+}
+
+.entrada-seta {
+  color: var(--muted);
+}
+
+.entrada-aviso {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text-2);
+}
+
+.entrada-aviso strong {
+  color: var(--text);
+}
+
+.entrada-campos {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 16px;
+  border-radius: var(--radius-card);
+  background: var(--surface);
+}
+
+.entrada-linha {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  min-height: 72px;
+  border-bottom: 1px solid var(--line);
+  cursor: text;
+}
+
+.entrada-linha:last-child {
+  border-bottom: 0;
+}
+
+.entrada-numero {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.entrada-campo {
+  display: flex;
+  flex: 1 1 160px;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.entrada-campo-rotulo {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.entrada-campo input {
+  width: 100%;
+  min-height: 36px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 18px;
+  font-weight: 800;
+  outline: none;
+  min-width: 0;
+}
+
+.entrada-campo input::placeholder {
+  font-weight: 600;
+  color: #9AA1AD;
+}
+
+.entrada-total {
+  font-size: 13px;
+  color: var(--muted);
+  margin-left: auto;
+}
+
+.entrada-fornecedores {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.entrada-fornecedores button {
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 22px;
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.entrada-fornecedores button[aria-pressed='true'] {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+  color: var(--primary-strong);
+}
+
+.entrada-confirmar {
+  width: 100%;
+  min-height: 58px;
+  border-radius: 18px;
+  font-size: 17px;
+  font-weight: 800;
+}

@@ -1,0 +1,111 @@
+.importar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  padding: 8px var(--gutter) 24px;
+}
+
+.importar-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  padding: var(--gutter);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-2);
+  overflow-wrap: anywhere;
+}
+
+.importar-card h2 {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.importar-colunas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.importar-colunas li {
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: var(--primary-soft);
+  color: var(--primary-strong);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.importar-arquivo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 132px;
+  padding: 16px;
+  border: 1.5px dashed #9AA1AD;
+  border-radius: var(--radius-card);
+  background: var(--bg);
+  color: var(--primary);
+  text-align: center;
+  cursor: pointer;
+}
+
+.importar-arquivo:focus-within {
+  outline: 3px solid var(--primary-on);
+  outline-offset: 2px;
+}
+
+.importar-arquivo input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.importar-arquivo-texto {
+  max-width: 100%;
+  font-size: 15px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.importar-formulario .btn {
+  min-height: 52px;
+}
+
+.importar-resultado h2 {
+  color: var(--ok-ink);
+}
+
+.importar-ignorados {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.importar-ignorados li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: var(--radius-ctl);
+  background: var(--alert-soft);
+  color: var(--alert-ink);
+}

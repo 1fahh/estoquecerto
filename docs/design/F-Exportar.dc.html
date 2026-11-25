@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Relatórios</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2347D6}a:hover{color:#1A36A8}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F4F5F7; color: #16181D; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; display: flex; flex-direction: column">
+  <div style="flex-grow: 1; padding: 20px 20px 0; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; flex-direction: column; gap: 2px">
+      <h1 style="margin: 0; font-size: 26px; font-weight: 800; letter-spacing: -0.5px">Relatórios</h1>
+      <span style="font-size: 14px; color: #5B6270">Baixe em CSV e abra no Excel ou Google Planilhas</span>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 8px">
+      <span style="font-size: 14px; font-weight: 600; color: #3A404C">Período</span>
+      <button type="button" style="flex-grow: 1; height: 46px; padding: 0 14px; border-radius: 14px; border: 1.5px solid #E3E6EB; background: #FFFFFF; color: #16181D; font-family: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: space-between">
+        <span style="display: flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2347D6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>11 a 25 de novembro</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5B6270" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+      </button>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="background: #FFFFFF; border-radius: 20px; padding: 16px; display: flex; align-items: center; gap: 12px">
+        <span style="width: 44px; height: 44px; border-radius: 14px; background: #E8EDFD; color: #2347D6; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8 12 3 3 8v8l9 5 9-5V8z"></path><path d="M3 8l9 5 9-5M12 13v8"></path></svg></span>
+        <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 15px">Estoque atual</strong><span style="font-size: 12px; color: #5B6270">128 produtos · saldo, limite e valor</span></span>
+        <button type="button" aria-label="Baixar estoque atual" style="width: 48px; height: 48px; border-radius: 14px; border: 0; background: #2347D6; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v3h16v-3"></path></svg></button>
+      </div>
+      <div style="background: #FFFFFF; border-radius: 20px; padding: 16px; display: flex; align-items: center; gap: 12px">
+        <span style="width: 44px; height: 44px; border-radius: 14px; background: #E8EDFD; color: #2347D6; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></span>
+        <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 15px">Movimentações</strong><span style="font-size: 12px; color: #5B6270">42 registros no período</span></span>
+        <button type="button" aria-label="Baixar movimentações" style="width: 48px; height: 48px; border-radius: 14px; border: 0; background: #2347D6; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v3h16v-3"></path></svg></button>
+      </div>
+      <div style="background: #FFFFFF; border-radius: 20px; padding: 16px; display: flex; align-items: center; gap: 12px">
+        <span style="width: 44px; height: 44px; border-radius: 14px; background: #E8EDFD; color: #2347D6; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M10 9v6M14 9v6"></path></svg></span>
+        <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 15px">Produtos parados</strong><span style="font-size: 12px; color: #5B6270">4 produtos · R$ 1.275,50</span></span>
+        <button type="button" aria-label="Baixar produtos parados" style="width: 48px; height: 48px; border-radius: 14px; border: 0; background: #2347D6; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v3h16v-3"></path></svg></button>
+      </div>
+      <div style="background: #FFFFFF; border-radius: 20px; padding: 16px; display: flex; align-items: center; gap: 12px">
+        <span style="width: 44px; height: 44px; border-radius: 14px; background: #FFF1E8; color: #C2410C; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 21h20L12 3z"></path><path d="M12 10v5M12 18h.01"></path></svg></span>
+        <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 15px">Lista de reposição</strong><span style="font-size: 12px; color: #5B6270">3 alertas ativos · pronta para cotar</span></span>
+        <button type="button" aria-label="Baixar lista de reposição" style="width: 48px; height: 48px; border-radius: 14px; border: 0; background: #2347D6; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v3h16v-3"></path></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <nav aria-label="Navegação principal" style="height: 72px; flex-shrink: 0; background: #FFFFFF; border-top: 1px solid #E3E6EB; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: center">
+    <a href="F-Painel.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; color: #5B6270; text-decoration: none; font-size: 11px; font-weight: 600">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z"></path></svg>Início</a>
+    <a href="F-Produtos.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; color: #5B6270; text-decoration: none; font-size: 11px; font-weight: 600">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8 12 3 3 8v8l9 5 9-5V8z"></path><path d="M3 8l9 5 9-5M12 13v8"></path></svg>Produtos</a>
+    <a href="F-Historico.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; color: #5B6270; text-decoration: none; font-size: 11px; font-weight: 600">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>Histórico</a>
+    <a href="F-Exportar.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; color: #2347D6; text-decoration: none; font-size: 11px; font-weight: 700">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6v18h12V7l-4-4z"></path><path d="M14 3v4h4M9 13h6M9 17h6"></path></svg>Relatórios</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
