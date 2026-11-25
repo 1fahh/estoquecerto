@@ -63,27 +63,55 @@ def _errar_com_ips_rotativos(anonimo, email: str, vezes: int) -> None:
         assert resposta.status_code == 401
 
 
-def test_rodizio_de_ip_esbarra_no_limite_por_email(anonimo, usuario):
+def test_rodizio_de_ip_esbarra_no_teto_da_conta(anonimo, usuario):
     _errar_com_ips_rotativos(anonimo, usuario.email, 30)
-    ip_novo = {"X-Forwarded-For": "10.9.9.9"}
-
-    primeira = anonimo.post("/api/auth/login", json={"email": usuario.email, "senha": "errada"}, headers=ip_novo)
-    segunda = anonimo.post("/api/auth/login", json={"email": usuario.email, "senha": "errada"}, headers=ip_novo)
-
-    assert primeira.status_code == 401
-    assert segunda.status_code == 429
-
-
-def test_ataque_ao_email_nao_tranca_a_dona_da_conta(anonimo, usuario):
-    _errar_com_ips_rotativos(anonimo, usuario.email, 40)
 
     resposta = anonimo.post(
         "/api/auth/login",
         json={"email": usuario.email, "senha": SENHA_TESTE},
-        headers={"X-Forwarded-For": "192.168.1.20"},
+        headers={"X-Forwarded-For": "10.9.9.9"},
     )
 
+    assert resposta.status_code == 429, "IP novo não fura o teto da conta, nem com a senha certa"
+
+
+def test_aparelho_de_confianca_entra_mesmo_com_a_conta_sob_ataque(usuario):
+    from fastapi.testclient import TestClient
+
+    from app.main import app
+
+    celular_da_dona = TestClient(app)
+    assert celular_da_dona.post("/api/auth/login", json={"email": usuario.email, "senha": SENHA_TESTE}).status_code == 200
+    assert "ec_dispositivo" in celular_da_dona.cookies
+
+    _errar_com_ips_rotativos(TestClient(app), usuario.email, 30)
+
+    resposta = celular_da_dona.post(
+        "/api/auth/login",
+        json={"email": usuario.email, "senha": SENHA_TESTE},
+        headers={"X-Forwarded-For": "192.168.1.20"},
+    )
     assert resposta.status_code == 200
+
+
+def test_cookie_de_aparelho_nao_serve_como_token_de_acesso(anonimo, usuario):
+    from app.security import criar_token_dispositivo
+
+    falso = criar_token_dispositivo(usuario)
+
+    assert anonimo.get("/api/auth/me", headers={"Authorization": f"Bearer {falso}"}).status_code == 401
+
+
+def test_ipv6_conta_pelo_bloco_64():
+    from starlette.requests import Request
+
+    from app.routers.auth import ip_do_cliente
+
+    def pedido(ip: str) -> Request:
+        return Request({"type": "http", "headers": [(b"x-forwarded-for", ip.encode())], "client": ("127.0.0.1", 1)})
+
+    assert ip_do_cliente(pedido("2001:db8:1:2::a")) == ip_do_cliente(pedido("2001:db8:1:2:ffff::b"))
+    assert ip_do_cliente(pedido("2001:db8:1:2::a")) != ip_do_cliente(pedido("2001:db8:1:3::a"))
 
 
 def test_tentativas_em_andamento_contam_para_o_limite():

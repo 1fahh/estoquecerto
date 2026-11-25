@@ -122,7 +122,7 @@ Quantidades são `NUMERIC(12,3)` (aceita litros fracionados); dinheiro `NUMERIC(
 Todas exigem Bearer, exceto `POST /api/auth/login` e `GET /api/health`. Erros: `{"detail": "mensagem em português"}`.
 
 ### Auth (RF01)
-- `POST /api/auth/login` `{email, senha}` → `{access_token, token_type:"bearer", usuario:{id,nome,email}}`; 401 "E-mail ou senha incorretos." Limite anti-força-bruta (em memória, janela de 5 min): 10 falhas por IP → 429; 30 falhas no mesmo e-mail → só IPs que já erraram ficam bloqueados (quem ataca não tranca a dona da conta). A tentativa é reservada já na checagem (requisições simultâneas não furam o limite) e um login certo devolve a reserva. IP = último item do `X-Forwarded-For` (o que o proxy do Render acrescenta; o cliente só forja os anteriores).
+- `POST /api/auth/login` `{email, senha}` → `{access_token, token_type:"bearer", usuario:{id,nome,email}}`; 401 "E-mail ou senha incorretos." Limite anti-força-bruta (em memória, janela de 5 min): 10 falhas por IP (IPv6 contado por /64) → 429; 30 falhas na mesma conta → 429 para **qualquer** IP, exceto o aparelho de confiança (cookie `ec_dispositivo`, JWT assinado `tipo=dispositivo`, 180 dias, HttpOnly, SameSite=Strict, path `/api/auth`, gravado a cada login certo) — assim o ataque não tranca a dona no celular dela. A tentativa é reservada já na checagem (requisições simultâneas não furam o limite) e um login certo devolve a reserva. IP = último item do `X-Forwarded-For` (o que o proxy do Render acrescenta; o cliente só forja os anteriores).
 - `GET /api/auth/me` → `{id,nome,email}`
 - `POST /api/auth/trocar-senha` `{senha_atual, nova_senha}` (mín. 8) → TokenOut com token novo (as outras sessões caem)
 

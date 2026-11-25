@@ -41,6 +41,33 @@ def criar_token(usuario: Usuario) -> str:
     return jwt.encode(payload, get_settings().jwt_secret, algorithm=ALGORITMO_JWT)
 
 
+DIAS_DISPOSITIVO = 180
+TIPO_DISPOSITIVO = "dispositivo"
+
+
+def criar_token_dispositivo(usuario: Usuario) -> str:
+    agora = datetime.now(timezone.utc)
+    payload = {
+        "sub": str(usuario.id),
+        "tipo": TIPO_DISPOSITIVO,
+        "iat": agora,
+        "exp": agora + timedelta(days=DIAS_DISPOSITIVO),
+    }
+    return jwt.encode(payload, get_settings().jwt_secret, algorithm=ALGORITMO_JWT)
+
+
+def usuario_do_dispositivo(token: str | None) -> int | None:
+    if not token:
+        return None
+    try:
+        payload = jwt.decode(token, get_settings().jwt_secret, algorithms=[ALGORITMO_JWT])
+        if payload.get("tipo") != TIPO_DISPOSITIVO:
+            return None
+        return int(payload["sub"])
+    except (jwt.PyJWTError, KeyError, ValueError, TypeError):
+        return None
+
+
 def _sessao_invalida() -> HTTPException:
     return HTTPException(
         status_code=401,
@@ -57,6 +84,8 @@ def get_current_user(
         raise _sessao_invalida()
     try:
         payload = jwt.decode(credenciais.credentials, get_settings().jwt_secret, algorithms=[ALGORITMO_JWT])
+        if payload.get("tipo") is not None:
+            raise _sessao_invalida()
         usuario_id = int(payload["sub"])
         versao = int(payload["ver"])
     except (jwt.PyJWTError, KeyError, ValueError, TypeError):
