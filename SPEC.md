@@ -79,7 +79,7 @@ estoquecerto/
 
 Quantidades são `NUMERIC(12,3)` (aceita litros fracionados); dinheiro `NUMERIC(12,2)`; datas `TIMESTAMPTZ` (UTC no banco, exibidas em America/Sao_Paulo no front).
 
-**usuarios**: `id` serial PK, `nome` varchar(120) not null, `email` varchar(254) unique not null (minúsculo), `senha_hash` varchar(255) not null, `criado_em` timestamptz default now().
+**usuarios**: `id` serial PK, `nome` varchar(120) not null, `email` varchar(254) unique not null (minúsculo), `senha_hash` varchar(255) not null, `token_versao` int not null default 0 (vai no JWT como `ver`; sobe a cada troca/redefinição de senha e derruba os tokens antigos), `criado_em` timestamptz default now().
 
 **categorias**: `id` serial PK, `nome` varchar(80) not null, unique (case-insensitive: índice único em `lower(nome)`).
 
@@ -122,9 +122,9 @@ Quantidades são `NUMERIC(12,3)` (aceita litros fracionados); dinheiro `NUMERIC(
 Todas exigem Bearer, exceto `POST /api/auth/login` e `GET /api/health`. Erros: `{"detail": "mensagem em português"}`.
 
 ### Auth (RF01)
-- `POST /api/auth/login` `{email, senha}` → `{access_token, token_type:"bearer", usuario:{id,nome,email}}`; 401 "E-mail ou senha incorretos." Limite simples anti-força-bruta: 10 tentativas/5 min por IP (em memória).
+- `POST /api/auth/login` `{email, senha}` → `{access_token, token_type:"bearer", usuario:{id,nome,email}}`; 401 "E-mail ou senha incorretos." Limite anti-força-bruta (em memória): 10 falhas/5 min por IP **e** por e-mail; login certo não conta. IP = último item do `X-Forwarded-For` (o que o proxy do Render acrescenta; o cliente só forja os anteriores).
 - `GET /api/auth/me` → `{id,nome,email}`
-- `POST /api/auth/trocar-senha` `{senha_atual, nova_senha}` (mín. 8) → 204
+- `POST /api/auth/trocar-senha` `{senha_atual, nova_senha}` (mín. 8) → TokenOut com token novo (as outras sessões caem)
 
 ### Categorias (RF03)
 - `GET /api/categorias` → `[{id, nome, total_produtos}]` ordenado por nome
@@ -155,7 +155,7 @@ Objeto **ProdutoOut**: `{id, nome, codigo, categoria_id, categoria_nome, unidade
 ### Relatórios (RF11, RF12, painel)
 - `GET /api/relatorios/painel` → `{data, produtos_ativos, alertas_ativos:[…até 5], total_alertas, parados_qtd, parados_valor, registros_hoje}`
 - `GET /api/relatorios/parados?dias=30` → `{dias, itens:[{produto_id, nome, unidade, saldo, custo_unitario, valor, dias_parado, ultima_saida_em}], total_valor, sem_custo_qtd}` ordenado por `dias_parado` desc
-- `GET /api/relatorios/exportar/{tipo}.csv` com `tipo ∈ estoque|movimentacoes|parados|reposicao|quinzena` e filtros iguais às listas (`de`, `ate`, `produto_id`, `tipo_mov`, `dias`) → `text/csv; charset=utf-8`, **BOM UTF-8, separador `;`, decimal com vírgula** (abre certo no Excel pt-BR), `Content-Disposition: attachment; filename="estoquecerto-<tipo>-AAAA-MM-DD.csv"`. `quinzena` = estoque atual + movimentações dos últimos 15 dias num único CSV (duas seções separadas por linha em branco). O conteúdo bate com o que a tela mostra (critério 14 h).
+- `GET /api/relatorios/exportar/{tipo}.csv` com `tipo ∈ estoque|movimentacoes|parados|reposicao|quinzena` e filtros iguais às listas (`de`, `ate`, `produto_id`, `tipo_mov`, `dias`) → `text/csv; charset=utf-8`, **BOM UTF-8, separador `;`, decimal com vírgula** (abre certo no Excel pt-BR); textos que começam com `= + - @` ou tab recebem `'` na frente (proteção contra fórmula em planilha), `Content-Disposition: attachment; filename="estoquecerto-<tipo>-AAAA-MM-DD.csv"`. `quinzena` = estoque atual + movimentações dos últimos 15 dias num único CSV (duas seções separadas por linha em branco). O conteúdo bate com o que a tela mostra (critério 14 h).
 - `POST /api/produtos/importar` (RF13, multipart `arquivo`) colunas: `nome;codigo;categoria;unidade;custo_unitario;estoque_minimo;percentual_alerta;localizacao;quantidade_inicial` (cabeçalho obrigatório, `;` ou `,`, decimal vírgula ou ponto). Cria categorias que não existem. Responde `{criados, ignorados:[{linha, motivo}]}`. Tudo numa transação; erro de linha → linha ignorada com motivo, não derruba o resto. Também `GET /api/produtos/modelo-importacao.csv`.
 
 ### Configurações
@@ -198,7 +198,7 @@ pytest contra o Postgres de `TEST_DATABASE_URL` (ou `DATABASE_URL`), criando um 
 
 ## 10. Deploy
 
-- `Dockerfile` multi-stage: `node:22-alpine` builda o front → `python:3.12-slim` instala `requirements.txt`, copia `backend/` e o `dist` para `/app/static`, `CMD` roda `alembic upgrade head` e depois `uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --proxy-headers --forwarded-allow-ips='*'`.
+- `Dockerfile` multi-stage: `node:22-alpine` builda o front → `python:3.12-slim` instala `requirements.txt`, copia `backend/` e o `dist` para `/app/static`, `CMD` roda `alembic upgrade head` e depois `uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --no-proxy-headers` (o IP do cliente é lido em `auth.ip_do_cliente`).
 - `render.yaml` (blueprint de referência): serviço web docker, plano free, `healthCheckPath: /api/health`, envs listadas na seção 3 (`sync: false` para segredos).
 - Backup diário (RNF07): `.github/workflows/backup.yml` às 06:00 UTC, `pg_dump` (cliente postgres 17) do segredo `DATABASE_URL` → artifact com retenção de 30 dias; também `workflow_dispatch`. Restauração documentada no README (`pg_restore`) + PITR do Neon.
 - Segurança (RNF04/18): HTTPS do Render; cabeçalhos `X-Content-Type-Options`, `X-Frame-Options: DENY`, `Referrer-Policy`, `Strict-Transport-Security` via middleware; nenhum dado pessoal além de nome e e-mail da usuária (RNF05/LGPD).

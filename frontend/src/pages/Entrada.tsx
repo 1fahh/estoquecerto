@@ -5,10 +5,23 @@ import { Icon } from '../components/Icon';
 import { Loading } from '../components/Loading';
 import { Toast } from '../components/Toast';
 import { formatMoeda, formatNumero, formatPercentual, formatQuantidade } from '../format';
-import type { ProdutoOut, RegistroOut, UltimaEntradaOut } from '../types';
+import type { ProdutoOut, RegistroOut } from '../types';
 import { ProdutoEscolha } from './registros/ProdutoEscolha';
 import { arredondar, lerNumero, mensagemDeFalha, voltarOuIr } from './registros/utilitarios';
 import './Entrada.css';
+
+type EntradaHistorico = { itens: { fornecedor: string | null }[]; total: number };
+
+const LIMITE_FORNECEDORES = 5;
+
+function fornecedoresDistintos(nomes: (string | null)[]): string[] {
+  const vistos = new Set<string>();
+  for (const nome of nomes) {
+    const limpo = nome?.trim();
+    if (limpo) vistos.add(limpo);
+  }
+  return [...vistos].slice(0, LIMITE_FORNECEDORES);
+}
 
 function limiteAposEntrada(produto: ProdutoOut, quantidade: number): number {
   return Math.max(produto.estoque_minimo ?? 0, (produto.percentual_alerta / 100) * quantidade);
@@ -23,7 +36,7 @@ export function Entrada() {
   const [produto, setProduto] = useState<ProdutoOut | null>(null);
   const [carregandoProduto, setCarregandoProduto] = useState(false);
   const [erroProduto, setErroProduto] = useState<string | null>(null);
-  const [ultima, setUltima] = useState<UltimaEntradaOut | null>(null);
+  const [fornecedoresUsados, setFornecedoresUsados] = useState<string[]>([]);
   const [quantidadeTexto, setQuantidadeTexto] = useState('');
   const [custoTexto, setCustoTexto] = useState('');
   const [fornecedor, setFornecedor] = useState('');
@@ -58,12 +71,12 @@ export function Entrada() {
     if (!produto) return;
     let ativo = true;
     api
-      .get<UltimaEntradaOut>(`/movimentacoes/ultima-entrada/${produto.id}`)
+      .get<EntradaHistorico>(`/movimentacoes?produto_id=${produto.id}&tipo=entrada&limite=100`)
       .then((dados) => {
-        if (ativo) setUltima(dados);
+        if (ativo) setFornecedoresUsados(fornecedoresDistintos(dados.itens.map((item) => item.fornecedor)));
       })
       .catch(() => {
-        if (ativo) setUltima(null);
+        if (ativo) setFornecedoresUsados([]);
       });
     return () => {
       ativo = false;
@@ -213,16 +226,14 @@ export function Entrada() {
             </label>
           </section>
 
-          {ultima?.fornecedor && (
+          {fornecedoresUsados.length > 0 && (
             <div className="entrada-fornecedores">
               <span className="texto-secundario">Usados antes:</span>
-              <button
-                type="button"
-                aria-pressed={fornecedor === ultima.fornecedor}
-                onClick={() => setFornecedor(ultima.fornecedor ?? '')}
-              >
-                {ultima.fornecedor}
-              </button>
+              {fornecedoresUsados.map((nome) => (
+                <button key={nome} type="button" aria-pressed={fornecedor === nome} onClick={() => setFornecedor(nome)}>
+                  {nome}
+                </button>
+              ))}
             </div>
           )}
 

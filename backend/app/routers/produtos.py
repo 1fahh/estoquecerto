@@ -4,11 +4,11 @@ from decimal import Decimal
 from typing import Literal
 
 from fastapi import APIRouter, Depends, File, HTTPException, Response, UploadFile
-from sqlalchemy import case, func, select
+from sqlalchemy import case, delete, func, select
 from sqlalchemy.orm import Session
 
 from app.db import get_db
-from app.models import Categoria, Movimentacao, Produto, Usuario
+from app.models import Alerta, Categoria, Movimentacao, Produto, Usuario
 from app.routers.configuracoes import obter_configuracao
 from app.schemas import AtivoIn, ImportacaoOut, ProdutoEdicaoIn, ProdutoIn, ProdutoOut
 from app.security import get_current_user
@@ -267,6 +267,7 @@ def excluir_produto(
             status_code=409,
             detail="Produto com movimentações não pode ser excluído; inative-o.",
         )
+    db.execute(delete(Alerta).where(Alerta.produto_id == produto_id))
     db.delete(produto)
     db.commit()
     return Response(status_code=204)

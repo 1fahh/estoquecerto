@@ -174,3 +174,18 @@ def test_csv_de_parados_tem_linha_de_total(cliente, criar_produto, sql, usuario)
 
 def test_tipo_de_exportacao_invalido_retorna_422(cliente):
     assert cliente.get("/api/relatorios/exportar/inexistente.csv").status_code == 422
+
+
+def test_csv_neutraliza_formulas_e_mantem_numeros_negativos(cliente, criar_produto, movimentar):
+    produto = criar_produto(nome="=HYPERLINK(\"http://x\")", codigo="+cmd", custo_unitario=10)
+    movimentar("entrada", produto_id=produto["id"], quantidade=5, fornecedor="@fornecedor")
+    movimentar("ajuste", produto_id=produto["id"], quantidade_contada=3, justificativa="-contagem física")
+
+    estoque = _secoes(cliente.get("/api/relatorios/exportar/estoque.csv").content)[0][1]
+    assert estoque[0] == "'=HYPERLINK(\"http://x\")"
+    assert estoque[1] == "'+cmd"
+
+    _, ajuste, entrada = _secoes(cliente.get("/api/relatorios/exportar/movimentacoes.csv").content)[0]
+    assert ajuste[4] == "-2"
+    assert ajuste[5] == "'-contagem física"
+    assert entrada[7] == "'@fornecedor"

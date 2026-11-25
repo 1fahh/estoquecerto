@@ -144,15 +144,6 @@ export function Relatorios() {
     },
   ];
 
-  const fechamento: Relatorio = {
-    id: 'quinzena',
-    titulo: 'Fechamento da quinzena',
-    subtitulo: 'Estoque atual e movimentações do período em um único CSV, com duas seções.',
-    icone: 'calendario',
-    caminho: `/relatorios/exportar/quinzena.csv${qs(periodoCsv)}`,
-    nomeArquivo: 'estoquecerto-quinzena.csv',
-  };
-
   return (
     <>
       <main className="page relatorios">
@@ -226,26 +217,6 @@ export function Relatorios() {
             {erroDownload}
           </p>
         )}
-
-        <section className="card relatorios-fechamento" aria-labelledby="relatorios-fechamento-titulo">
-          <div className="relatorios-fechamento-topo">
-            <span className="relatorios-icone">
-              <Icon name={fechamento.icone} />
-            </span>
-            <div className="relatorios-fechamento-texto">
-              <h2 id="relatorios-fechamento-titulo">{fechamento.titulo}</h2>
-              <span className="texto-secundario">{fechamento.subtitulo}</span>
-            </div>
-          </div>
-          <button
-            type="button"
-            className="btn btn-primario btn-bloco"
-            onClick={() => baixar(fechamento)}
-            disabled={baixando !== null || !resumo}
-          >
-            {baixando === fechamento.id ? 'Baixando…' : 'Baixar fechamento (CSV)'}
-          </button>
-        </section>
 
         <Link to="/importar" className="relatorios-importar">
           Importar produtos por CSV

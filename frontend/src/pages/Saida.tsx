@@ -69,6 +69,7 @@ export function Saida() {
   function escolherRapida(valor: number) {
     setQuantidadeTexto(String(valor));
     setModoOutra(false);
+    if (produto && valor <= produto.saldo) void registrar(valor);
   }
 
   function escolherOutra() {
@@ -85,14 +86,14 @@ export function Saida() {
     produto !== null && restante !== null && produto.limite > 0 && restante <= produto.limite && !produto.em_alerta;
   const alertaJaAtivo = produto !== null && restante !== null && produto.limite > 0 && restante <= produto.limite && produto.em_alerta;
 
-  async function confirmar() {
-    if (!produto || quantidade === null || !podeConfirmar) return;
+  async function registrar(quantidadeRegistrada: number) {
+    if (!produto || enviando) return;
     setEnviando(true);
     setErroEnvio(null);
     try {
       const registro = await api.post<RegistroOut>('/movimentacoes/saida', {
         produto_id: produto.id,
-        quantidade,
+        quantidade: quantidadeRegistrada,
         motivo,
         motivo_detalhe: motivo === 'outro' && detalhe.trim() ? detalhe.trim() : null,
       });
@@ -102,6 +103,10 @@ export function Saida() {
     } finally {
       setEnviando(false);
     }
+  }
+
+  function confirmar() {
+    if (quantidade !== null && podeConfirmar) void registrar(quantidade);
   }
 
   if (concluido) {
@@ -145,6 +150,33 @@ export function Saida() {
         {!carregandoProduto && produto && (
           <>
             <div className="saida-bloco">
+              <div className="saida-motivos" role="group" aria-label="Motivo">
+                <span className="campo-rotulo">Motivo</span>
+                {MOTIVOS.map((opcao) => (
+                  <button
+                    key={opcao.valor}
+                    type="button"
+                    aria-pressed={motivo === opcao.valor}
+                    onClick={() => setMotivo(opcao.valor)}
+                  >
+                    {opcao.rotulo}
+                  </button>
+                ))}
+              </div>
+              {motivo === 'outro' && (
+                <input
+                  className="saida-entrada-outra"
+                  type="text"
+                  maxLength={120}
+                  placeholder="Qual o motivo? (opcional)"
+                  value={detalhe}
+                  onChange={(evento) => setDetalhe(evento.target.value)}
+                  aria-label="Detalhe do motivo"
+                />
+              )}
+            </div>
+
+            <div className="saida-bloco">
               <span className="campo-rotulo">Quantidade ({produto.unidade})</span>
               <div className="saida-quantidades" role="radiogroup" aria-label="Quantidade">
                 {QUANTIDADES_RAPIDAS.map((valor) => (
@@ -185,33 +217,6 @@ export function Saida() {
                 <p className="campo-erro" role="alert">
                   {`Saldo insuficiente: disponível ${formatNumero(produto.saldo)} ${produto.unidade}, saída pedida ${formatNumero(quantidade ?? 0)} ${produto.unidade}.`}
                 </p>
-              )}
-            </div>
-
-            <div className="saida-bloco">
-              <div className="saida-motivos" role="group" aria-label="Motivo">
-                <span className="campo-rotulo">Motivo</span>
-                {MOTIVOS.map((opcao) => (
-                  <button
-                    key={opcao.valor}
-                    type="button"
-                    aria-pressed={motivo === opcao.valor}
-                    onClick={() => setMotivo(opcao.valor)}
-                  >
-                    {opcao.rotulo}
-                  </button>
-                ))}
-              </div>
-              {motivo === 'outro' && (
-                <input
-                  className="saida-entrada-outra"
-                  type="text"
-                  maxLength={120}
-                  placeholder="Qual o motivo? (opcional)"
-                  value={detalhe}
-                  onChange={(evento) => setDetalhe(evento.target.value)}
-                  aria-label="Detalhe do motivo"
-                />
               )}
             </div>
 

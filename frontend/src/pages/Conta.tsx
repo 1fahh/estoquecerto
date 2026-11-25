@@ -1,10 +1,10 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../api';
+import { api, setToken } from '../api';
 import { useAuth } from '../auth';
 import { Loading } from '../components/Loading';
 import { PageHeader } from '../components/PageHeader';
-import type { ConfiguracoesIn, ConfiguracoesOut, TrocarSenhaIn } from '../types';
+import type { ConfiguracoesIn, ConfiguracoesOut, LoginResposta, TrocarSenhaIn } from '../types';
 import './Conta.css';
 
 const MENSAGEM_PADRAO = 'Não foi possível concluir a operação. Tente novamente.';
@@ -36,7 +36,8 @@ function FormularioSenha() {
     const corpo: TrocarSenhaIn = { senha_atual: senhaAtual, nova_senha: novaSenha };
     setEnviando(true);
     try {
-      await api.post<void>('/auth/trocar-senha', corpo);
+      const resposta = await api.post<LoginResposta>('/auth/trocar-senha', corpo);
+      setToken(resposta.access_token);
       setSenhaAtual('');
       setNovaSenha('');
       setConfirmacao('');

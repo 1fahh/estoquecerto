@@ -14,7 +14,6 @@ const MOTIVOS = [
   { valor: 'uso-sem-registro', rotulo: 'Usei e esqueci de registrar' },
   { valor: 'defeito-ou-perda', rotulo: 'Peça com defeito ou perdida' },
   { valor: 'registro-errado', rotulo: 'Registrei errado antes' },
-  { valor: 'contagem-fisica', rotulo: 'Contagem física' },
 ] as const;
 
 type MotivoAjuste = (typeof MOTIVOS)[number]['valor'];

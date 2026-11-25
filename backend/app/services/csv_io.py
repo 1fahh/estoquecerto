@@ -61,6 +61,15 @@ class Exportacao:
     nome_arquivo: str
 
 
+INICIOS_DE_FORMULA = ("=", "+", "-", "@", "\t", "\r")
+
+
+def texto(valor: str | None) -> str:
+    """Texto digitado pela usuária; neutraliza fórmulas de planilha (CSV injection)."""
+    valor = valor or ""
+    return "'" + valor if valor.startswith(INICIOS_DE_FORMULA) else valor
+
+
 def formatar_data(valor: datetime | None) -> str:
     if valor is None:
         return ""
@@ -95,10 +104,10 @@ def montar_csv(secoes: list[Secao]) -> bytes:
 def _linhas_estoque(db: Session) -> list[Linha]:
     return [
         [
-            item["nome"],
-            item["codigo"] or "",
-            item["categoria_nome"] or "",
-            item["unidade"],
+            texto(item["nome"]),
+            texto(item["codigo"]),
+            texto(item["categoria_nome"]),
+            texto(item["unidade"]),
             formatar_quantidade(item["saldo"]),
             formatar_quantidade(item["limite"]),
             "Repor" if item["em_alerta"] else "OK",
@@ -114,14 +123,14 @@ def _linhas_movimentacoes(db: Session, **filtros: Any) -> list[Linha]:
     return [
         [
             formatar_data(linha.data_hora),
-            linha.produto_nome,
-            linha.unidade,
+            texto(linha.produto_nome),
+            texto(linha.unidade),
             ROTULO_TIPO[linha.tipo],
             formatar_quantidade(linha.quantidade),
-            linha.motivo or "",
+            texto(linha.motivo),
             formatar_dinheiro(linha.custo_unitario),
-            linha.fornecedor or "",
-            linha.usuario_nome,
+            texto(linha.fornecedor),
+            texto(linha.usuario_nome),
             formatar_quantidade(linha.saldo_apos),
         ]
         for linha in relatorios.movimentacoes(db, **filtros)
@@ -132,8 +141,8 @@ def _linhas_parados(db: Session, dias: int) -> list[Linha]:
     relatorio = relatorios.parados(db, dias)
     linhas = [
         [
-            item["nome"],
-            item["unidade"],
+            texto(item["nome"]),
+            texto(item["unidade"]),
             formatar_quantidade(item["saldo"]),
             formatar_dinheiro(item["custo_unitario"]),
             formatar_dinheiro(item["valor"]),
@@ -149,8 +158,8 @@ def _linhas_parados(db: Session, dias: int) -> list[Linha]:
 def _linhas_reposicao(db: Session) -> list[Linha]:
     return [
         [
-            alerta["produto_nome"],
-            alerta["unidade"],
+            texto(alerta["produto_nome"]),
+            texto(alerta["unidade"]),
             formatar_quantidade(alerta["saldo_atual"]),
             formatar_quantidade(alerta["limite"]),
             formatar_data(alerta["criado_em"]),

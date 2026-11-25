@@ -8,7 +8,7 @@ from sqlalchemy import select
 
 from app.db import SessionLocal
 from app.models import Alerta, Categoria, Movimentacao, Produto, Usuario
-from app.security import hash_senha
+from app.security import definir_senha, hash_senha
 
 CODIGO_DEMO = "OL-5W30"
 
@@ -40,7 +40,7 @@ def redefinir_senha(email: str, senha: str | None) -> None:
         usuario = db.scalar(select(Usuario).where(Usuario.email == email))
         if usuario is None:
             raise SystemExit(f"Nenhum usuário com o e-mail {email}.")
-        usuario.senha_hash = hash_senha(_pedir_senha(senha))
+        definir_senha(usuario, _pedir_senha(senha))
         db.commit()
     print(f"Senha de {email} redefinida.")
 

@@ -72,18 +72,39 @@ class AtivoIn(BaseModel):
     ativo: bool
 
 
+CASAS_QUANTIDADE = Decimal("0.001")
+
+
+def _valida_quantidade_movimento(valor: Decimal) -> Decimal:
+    if valor <= 0:
+        raise ValueError("Quantidade deve ser maior que zero.")
+    if valor != valor.quantize(CASAS_QUANTIDADE):
+        raise ValueError("Use no máximo 3 casas decimais.")
+    return valor
+
+
 class EntradaIn(BaseModel):
     produto_id: int
-    quantidade: Numero = Field(gt=0)
+    quantidade: Numero
     custo_unitario: Numero | None = Field(default=None, ge=0)
     fornecedor: str | None = Field(default=None, max_length=160)
+
+    @field_validator("quantidade")
+    @classmethod
+    def quantidade_valida(cls, valor: Decimal) -> Decimal:
+        return _valida_quantidade_movimento(valor)
 
 
 class SaidaIn(BaseModel):
     produto_id: int
-    quantidade: Numero = Field(gt=0)
+    quantidade: Numero
     motivo: Literal["consumo", "perda", "outro"]
     motivo_detalhe: str | None = Field(default=None, max_length=200)
+
+    @field_validator("quantidade")
+    @classmethod
+    def quantidade_valida(cls, valor: Decimal) -> Decimal:
+        return _valida_quantidade_movimento(valor)
 
 
 class AjusteIn(BaseModel):

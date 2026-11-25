@@ -75,7 +75,7 @@ def engine_admin() -> Iterator[Engine]:
 
 @pytest.fixture(autouse=True)
 def limpar_banco(engine_admin: Engine) -> Iterator[None]:
-    rota_auth._tentativas_por_ip.clear()
+    rota_auth._tentativas.clear()
     with engine_admin.begin() as conexao:
         schema_atual = conexao.execute(text("SELECT current_schema()")).scalar()
         if schema_atual != SCHEMA_TESTE:
@@ -108,7 +108,7 @@ def anonimo() -> TestClient:
 
 @pytest.fixture
 def cliente(usuario: Usuario) -> TestClient:
-    return TestClient(app, headers={"Authorization": f"Bearer {criar_token(usuario.id)}"})
+    return TestClient(app, headers={"Authorization": f"Bearer {criar_token(usuario)}"})
 
 
 @pytest.fixture

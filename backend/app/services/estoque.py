@@ -246,6 +246,7 @@ def registrar_movimentacao(db: Session, usuario: Usuario, tipo: str, dados: dict
     else:
         raise ValueError(f"Tipo de movimentação desconhecido: {tipo}")
 
+    movimento.data_hora = datetime.now(timezone.utc)
     db.add(movimento)
     db.flush()
     estado = situacao(db, produto)

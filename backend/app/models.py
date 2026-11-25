@@ -27,6 +27,7 @@ class Usuario(Base):
     nome: Mapped[str] = mapped_column(String(120))
     email: Mapped[str] = mapped_column(String(254), unique=True)
     senha_hash: Mapped[str] = mapped_column(String(255))
+    token_versao: Mapped[int] = mapped_column(Integer, server_default="0", default=0)
     criado_em: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )

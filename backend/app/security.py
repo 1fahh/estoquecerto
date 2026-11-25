@@ -18,6 +18,11 @@ def hash_senha(senha: str) -> str:
     return bcrypt.hashpw(senha.encode("utf-8"), bcrypt.gensalt()).decode("ascii")
 
 
+def definir_senha(usuario: Usuario, senha: str) -> None:
+    usuario.senha_hash = hash_senha(senha)
+    usuario.token_versao = (usuario.token_versao or 0) + 1
+
+
 def verificar_senha(senha: str, senha_hash: str) -> bool:
     try:
         return bcrypt.checkpw(senha.encode("utf-8"), senha_hash.encode("ascii"))
@@ -25,21 +30,15 @@ def verificar_senha(senha: str, senha_hash: str) -> bool:
         return False
 
 
-def _segredo() -> str:
-    segredo = get_settings().jwt_secret
-    if not segredo:
-        raise RuntimeError("JWT_SECRET não configurado.")
-    return segredo
-
-
-def criar_token(usuario_id: int) -> str:
+def criar_token(usuario: Usuario) -> str:
     agora = datetime.now(timezone.utc)
     payload = {
-        "sub": str(usuario_id),
+        "sub": str(usuario.id),
+        "ver": usuario.token_versao,
         "iat": agora,
         "exp": agora + timedelta(days=get_settings().jwt_expire_days),
     }
-    return jwt.encode(payload, _segredo(), algorithm=ALGORITMO_JWT)
+    return jwt.encode(payload, get_settings().jwt_secret, algorithm=ALGORITMO_JWT)
 
 
 def _sessao_invalida() -> HTTPException:
@@ -57,11 +56,12 @@ def get_current_user(
     if credenciais is None:
         raise _sessao_invalida()
     try:
-        payload = jwt.decode(credenciais.credentials, _segredo(), algorithms=[ALGORITMO_JWT])
+        payload = jwt.decode(credenciais.credentials, get_settings().jwt_secret, algorithms=[ALGORITMO_JWT])
         usuario_id = int(payload["sub"])
-    except (jwt.PyJWTError, KeyError, ValueError):
+        versao = int(payload["ver"])
+    except (jwt.PyJWTError, KeyError, ValueError, TypeError):
         raise _sessao_invalida()
     usuario = db.get(Usuario, usuario_id)
-    if usuario is None:
+    if usuario is None or usuario.token_versao != versao:
         raise _sessao_invalida()
     return usuario

@@ -261,3 +261,53 @@ def test_entrada_com_custo_atualiza_custo_do_produto(criar_produto, movimentar, 
     atual = cliente.get(f"/api/produtos/{produto['id']}").json()
     assert Decimal(str(atual["custo_unitario"])) == Decimal("14.00")
     assert Decimal(str(atual["valor_estoque"])) == Decimal("84.00")
+
+
+def test_produto_sem_movimentacoes_com_alerta_ativo_pode_ser_excluido(cliente, criar_produto, sql):
+    produto = criar_produto(estoque_minimo=5)
+    alertas_antes = sql("SELECT COUNT(*) FROM alertas WHERE produto_id = :pid", {"pid": produto["id"]})
+    assert alertas_antes[0][0] == 1
+
+    resposta = cliente.delete(f"/api/produtos/{produto['id']}")
+
+    assert resposta.status_code == 204
+    assert sql("SELECT COUNT(*) FROM alertas WHERE produto_id = :pid", {"pid": produto["id"]})[0][0] == 0
+    assert cliente.get(f"/api/produtos/{produto['id']}").status_code == 404
+
+
+@pytest.mark.parametrize("quantidade", [0.0004, 0.0005, 1.2345])
+def test_quantidade_com_mais_de_tres_casas_decimais_e_recusada(cliente, criar_produto, quantidade):
+    produto = criar_produto()
+
+    entrada = cliente.post("/api/movimentacoes/entrada", json={"produto_id": produto["id"], "quantidade": quantidade})
+    saida = cliente.post(
+        "/api/movimentacoes/saida",
+        json={"produto_id": produto["id"], "quantidade": quantidade, "motivo": "consumo"},
+    )
+
+    assert entrada.status_code == 422
+    assert "Use no máximo 3 casas decimais." in entrada.text
+    assert saida.status_code == 422
+
+
+@pytest.mark.parametrize("quantidade", [0, -2])
+def test_quantidade_zero_ou_negativa_e_recusada_em_portugues(cliente, criar_produto, quantidade):
+    produto = criar_produto()
+
+    resposta = cliente.post("/api/movimentacoes/entrada", json={"produto_id": produto["id"], "quantidade": quantidade})
+
+    assert resposta.status_code == 422
+    assert "Quantidade deve ser maior que zero." in resposta.text
+
+
+def test_data_hora_das_movimentacoes_segue_a_ordem_de_gravacao(cliente, criar_produto, movimentar):
+    produto = criar_produto()
+    movimentar("entrada", produto_id=produto["id"], quantidade=10)
+    movimentar("saida", produto_id=produto["id"], quantidade=4, motivo="consumo")
+    movimentar("entrada", produto_id=produto["id"], quantidade=1)
+
+    itens = cliente.get("/api/movimentacoes", params={"produto_id": produto["id"]}).json()["itens"]
+    cronologicos = sorted(itens, key=lambda item: item["id"])
+
+    assert [item["data_hora"] for item in cronologicos] == sorted(item["data_hora"] for item in cronologicos)
+    assert cronologicos[-1]["saldo_apos"] == itens[0]["saldo_apos"] == 7

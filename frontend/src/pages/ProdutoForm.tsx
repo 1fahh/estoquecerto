@@ -39,14 +39,19 @@ type Formulario = {
 function lerDecimal(texto: string): number | null {
   const limpo = texto.replace(/R\$/g, '').replace(/\s/g, '');
   if (!limpo) return null;
-  const normalizado = limpo.includes(',') ? limpo.replace(/\./g, '').replace(',', '.') : limpo;
+  const milharSemDecimal = /^\d{1,3}(\.\d{3})+$/.test(limpo);
+  const normalizado = limpo.includes(',') || milharSemDecimal ? limpo.replace(/\./g, '').replace(',', '.') : limpo;
   const valor = Number(normalizado);
   return Number.isFinite(valor) ? valor : null;
 }
 
 function textoDecimal(valor: number | null, minimo: number, maximo: number): string {
   if (valor === null) return '';
-  return valor.toLocaleString('pt-BR', { minimumFractionDigits: minimo, maximumFractionDigits: maximo });
+  return valor.toLocaleString('pt-BR', {
+    minimumFractionDigits: minimo,
+    maximumFractionDigits: maximo,
+    useGrouping: false,
+  });
 }
 
 function rotuloCurto(unidade: string): string {
@@ -139,6 +144,8 @@ export function ProdutoForm() {
   const [ocupado, setOcupado] = useState(false);
   const [categoriaNova, setCategoriaNova] = useState<string | null>(null);
   const [erroCategoria, setErroCategoria] = useState<string | null>(null);
+  const [categoriaEditada, setCategoriaEditada] = useState<string | null>(null);
+  const [erroCategoriaEditada, setErroCategoriaEditada] = useState<string | null>(null);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [produto, setProduto] = useState<ProdutoOut | null>(null);
 
@@ -201,6 +208,28 @@ export function ProdutoForm() {
       setErroCategoria(null);
     } catch (falha) {
       setErroCategoria(mensagemDeFalha(falha));
+    }
+  }
+
+  async function renomearCategoria() {
+    const categoria = categorias.find((item) => item.id === form?.categoriaId);
+    const nome = (categoriaEditada ?? '').trim();
+    if (!categoria) return;
+    if (!nome) {
+      setErroCategoriaEditada('Informe o nome da categoria.');
+      return;
+    }
+    try {
+      const atualizada = await api.put<Categoria>(`/categorias/${categoria.id}`, { nome });
+      setCategorias((lista) =>
+        lista
+          .map((item) => (item.id === atualizada.id ? atualizada : item))
+          .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR')),
+      );
+      setCategoriaEditada(null);
+      setErroCategoriaEditada(null);
+    } catch (falha) {
+      setErroCategoriaEditada(mensagemDeFalha(falha));
     }
   }
 
@@ -338,7 +367,11 @@ export function ProdutoForm() {
                   type="button"
                   className="pf-chip"
                   aria-pressed={marcada}
-                  onClick={() => atualizar({ categoriaId: marcada ? null : categoria.id })}
+                  onClick={() => {
+                    atualizar({ categoriaId: marcada ? null : categoria.id });
+                    setCategoriaEditada(null);
+                    setErroCategoriaEditada(null);
+                  }}
                 >
                   {categoria.nome}
                 </button>
@@ -378,6 +411,50 @@ export function ProdutoForm() {
             </div>
           )}
           {erroCategoria && <p className="campo-erro">{erroCategoria}</p>}
+
+          {form.categoriaId !== null && categoriaEditada === null && (
+            <button
+              type="button"
+              className="pf-botao-texto"
+              onClick={() =>
+                setCategoriaEditada(categorias.find((item) => item.id === form.categoriaId)?.nome ?? '')
+              }
+            >
+              Renomear categoria selecionada
+            </button>
+          )}
+
+          {categoriaEditada !== null && (
+            <div className="pf-categoria-nova">
+              <input
+                type="text"
+                aria-label="Novo nome da categoria"
+                value={categoriaEditada}
+                maxLength={80}
+                onChange={(evento) => setCategoriaEditada(evento.target.value)}
+                onKeyDown={(evento) => {
+                  if (evento.key === 'Enter') {
+                    evento.preventDefault();
+                    void renomearCategoria();
+                  }
+                }}
+              />
+              <button type="button" className="btn btn-primario pf-botao-compacto" onClick={() => void renomearCategoria()}>
+                Salvar
+              </button>
+              <button
+                type="button"
+                className="pf-botao-texto"
+                onClick={() => {
+                  setCategoriaEditada(null);
+                  setErroCategoriaEditada(null);
+                }}
+              >
+                Cancelar
+              </button>
+            </div>
+          )}
+          {erroCategoriaEditada && <p className="campo-erro">{erroCategoriaEditada}</p>}
 
           <div className="pf-linha-dupla">
             <label className="pf-campo">

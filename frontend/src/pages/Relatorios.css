@@ -121,31 +121,6 @@
   cursor: wait;
 }
 
-.relatorios-fechamento {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.relatorios-fechamento-topo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.relatorios-fechamento-texto {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-
-.relatorios-fechamento-texto h2 {
-  margin: 0;
-  font-size: 15px;
-  font-weight: 700;
-}
-
 .relatorios-importar {
   display: flex;
   align-items: center;

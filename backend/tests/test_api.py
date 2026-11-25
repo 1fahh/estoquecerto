@@ -53,6 +53,29 @@ def test_login_tem_limite_de_tentativas_por_ip(anonimo, usuario):
     assert resposta.status_code == 429
 
 
+def test_trocar_ip_falso_no_x_forwarded_for_nao_burla_o_limite(anonimo, usuario):
+    for numero in range(10):
+        anonimo.post(
+            "/api/auth/login",
+            json={"email": usuario.email, "senha": "errada"},
+            headers={"X-Forwarded-For": f"10.0.0.{numero}"},
+        )
+
+    resposta = anonimo.post(
+        "/api/auth/login",
+        json={"email": usuario.email, "senha": SENHA_TESTE},
+        headers={"X-Forwarded-For": "10.0.0.99"},
+    )
+
+    assert resposta.status_code == 429
+
+
+def test_login_certo_nao_conta_como_tentativa(anonimo, usuario):
+    for _ in range(12):
+        resposta = anonimo.post("/api/auth/login", json={"email": usuario.email, "senha": SENHA_TESTE})
+        assert resposta.status_code == 200
+
+
 @pytest.mark.parametrize(("metodo", "caminho"), ROTAS_PROTEGIDAS)
 def test_rotas_exigem_token(anonimo, metodo, caminho):
     resposta = anonimo.request(metodo, caminho, json={})
@@ -82,8 +105,11 @@ def test_trocar_senha_exige_senha_atual_correta(cliente, anonimo, usuario):
         "/api/auth/trocar-senha",
         json={"senha_atual": SENHA_TESTE, "nova_senha": "nova-senha-123"},
     )
-    assert aceita.status_code == 204
+    assert aceita.status_code == 200
+    token_novo = aceita.json()["access_token"]
 
+    assert cliente.get("/api/auth/me").status_code == 401, "token anterior à troca deve cair"
+    assert anonimo.get("/api/auth/me", headers={"Authorization": f"Bearer {token_novo}"}).status_code == 200
     assert anonimo.post("/api/auth/login", json={"email": usuario.email, "senha": "nova-senha-123"}).status_code == 200
 
 
@@ -133,3 +159,27 @@ def test_desempenho_com_500_produtos_e_movimentos(cliente: TestClient, sql, usua
     assert painel.status_code == 200
     assert painel.json()["produtos_ativos"] == 500
     assert tempo_painel < 2, f"GET /api/relatorios/painel levou {tempo_painel:.2f} s"
+
+
+def test_jwt_secret_e_obrigatoria_na_configuracao(monkeypatch):
+    from pydantic import ValidationError
+
+    from app.config import Settings
+
+    monkeypatch.delenv("JWT_SECRET")
+    with pytest.raises(ValidationError, match="jwt_secret"):
+        Settings(database_url="postgresql://usuario:senha@localhost/banco", _env_file=None)
+
+
+def test_payload_de_usuario_so_expoe_nome_e_email(anonimo, cliente, usuario):
+    from app.models import Usuario
+
+    colunas = {coluna.name for coluna in Usuario.__table__.columns}
+    assert colunas == {"id", "nome", "email", "senha_hash", "criado_em", "token_versao"}
+
+    login = anonimo.post("/api/auth/login", json={"email": usuario.email, "senha": SENHA_TESTE})
+    assert set(login.json()["usuario"]) == {"id", "nome", "email"}
+
+    me = cliente.get("/api/auth/me")
+    assert me.status_code == 200
+    assert set(me.json()) <= {"id", "nome", "email"}

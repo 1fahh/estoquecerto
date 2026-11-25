@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     )
 
     database_url: str
-    jwt_secret: str = ""
+    jwt_secret: str
     jwt_expire_days: int = 7
 
     admin_email: str | None = None
@@ -34,6 +34,13 @@ class Settings(BaseSettings):
 
     app_url: str = "http://localhost:8000"
     static_dir: str = "static"
+
+    @field_validator("jwt_secret")
+    @classmethod
+    def jwt_secret_obrigatorio(cls, valor: str) -> str:
+        if not valor.strip():
+            raise ValueError("JWT_SECRET é obrigatória: configure a variável de ambiente.")
+        return valor
 
     @field_validator("database_url")
     @classmethod
