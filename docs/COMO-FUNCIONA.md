@@ -59,7 +59,7 @@ sequenceDiagram
 | Produto com histórico só é inativado | apagar quebraria o histórico (RN09) |
 | CSV com BOM, `;` e vírgula decimal | abre direto no Excel em português |
 | Textos do CSV começando com `= + - @` ganham `'` | impede que um nome de produto vire fórmula na planilha |
-| Limite de login por IP **e** por e-mail, só falhas | trocar de IP falso não burla; login certo não bloqueia |
+| Limite de login: 10 falhas por IP; acima de 30 no mesmo e-mail, só IPs que já erraram são barrados; tentativa reservada na checagem | quem fica trocando de IP ganha 1 tentativa por IP; um atacante não tranca a dona da conta; tentativas simultâneas não furam o limite |
 | `token_versao` no usuário | trocar a senha derruba as sessões abertas em outros aparelhos |
 | E-mail de alerta desligado (`EMAIL_ENABLED=false`) | escolha atual; o alerta aparece no painel, e ligar o e-mail é só configurar o SMTP |
 

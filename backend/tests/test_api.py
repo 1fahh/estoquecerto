@@ -53,21 +53,50 @@ def test_login_tem_limite_de_tentativas_por_ip(anonimo, usuario):
     assert resposta.status_code == 429
 
 
-def test_trocar_ip_falso_no_x_forwarded_for_nao_burla_o_limite(anonimo, usuario):
-    for numero in range(10):
-        anonimo.post(
+def _errar_com_ips_rotativos(anonimo, email: str, vezes: int) -> None:
+    for numero in range(vezes):
+        resposta = anonimo.post(
             "/api/auth/login",
-            json={"email": usuario.email, "senha": "errada"},
-            headers={"X-Forwarded-For": f"10.0.0.{numero}"},
+            json={"email": email, "senha": "errada"},
+            headers={"X-Forwarded-For": f"10.0.{numero // 250}.{numero % 250}"},
         )
+        assert resposta.status_code == 401
+
+
+def test_rodizio_de_ip_esbarra_no_limite_por_email(anonimo, usuario):
+    _errar_com_ips_rotativos(anonimo, usuario.email, 30)
+    ip_novo = {"X-Forwarded-For": "10.9.9.9"}
+
+    primeira = anonimo.post("/api/auth/login", json={"email": usuario.email, "senha": "errada"}, headers=ip_novo)
+    segunda = anonimo.post("/api/auth/login", json={"email": usuario.email, "senha": "errada"}, headers=ip_novo)
+
+    assert primeira.status_code == 401
+    assert segunda.status_code == 429
+
+
+def test_ataque_ao_email_nao_tranca_a_dona_da_conta(anonimo, usuario):
+    _errar_com_ips_rotativos(anonimo, usuario.email, 40)
 
     resposta = anonimo.post(
         "/api/auth/login",
         json={"email": usuario.email, "senha": SENHA_TESTE},
-        headers={"X-Forwarded-For": "10.0.0.99"},
+        headers={"X-Forwarded-For": "192.168.1.20"},
     )
 
-    assert resposta.status_code == 429
+    assert resposta.status_code == 200
+
+
+def test_tentativas_em_andamento_contam_para_o_limite():
+    from fastapi import HTTPException
+
+    from app.routers import auth
+
+    for _ in range(auth.LIMITE_POR_IP):
+        auth.reservar_tentativa("ip:203.0.113.5", "email:simultaneo@teste")
+
+    with pytest.raises(HTTPException) as erro:
+        auth.reservar_tentativa("ip:203.0.113.5", "email:simultaneo@teste")
+    assert erro.value.status_code == 429
 
 
 def test_login_certo_nao_conta_como_tentativa(anonimo, usuario):
