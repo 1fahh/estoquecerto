@@ -94,6 +94,30 @@ def test_aparelho_de_confianca_entra_mesmo_com_a_conta_sob_ataque(usuario):
     assert resposta.status_code == 200
 
 
+def test_trocar_a_senha_derruba_os_aparelhos_de_confianca(usuario):
+    from fastapi.testclient import TestClient
+
+    from app.main import app
+    from app.models import Usuario
+    from app.security import dispositivo_confiavel
+
+    celular = TestClient(app)
+    login = celular.post("/api/auth/login", json={"email": usuario.email, "senha": SENHA_TESTE})
+    cookie_antigo = celular.cookies["ec_dispositivo"]
+    outro = TestClient(app, headers={"Authorization": f"Bearer {login.json()['access_token']}"})
+    troca = outro.post("/api/auth/trocar-senha", json={"senha_atual": SENHA_TESTE, "nova_senha": "nova-senha-123"})
+    assert troca.status_code == 200
+
+    from sqlalchemy.orm import Session
+
+    from tests.conftest import engine_app
+
+    with Session(engine_app) as sessao:
+        atual = sessao.get(Usuario, usuario.id)
+        assert not dispositivo_confiavel(cookie_antigo, atual)
+        assert dispositivo_confiavel(outro.cookies["ec_dispositivo"], atual)
+
+
 def test_cookie_de_aparelho_nao_serve_como_token_de_acesso(anonimo, usuario):
     from app.security import criar_token_dispositivo
 

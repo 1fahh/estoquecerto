@@ -17,7 +17,7 @@ from app.security import (
     criar_token_dispositivo,
     definir_senha,
     get_current_user,
-    usuario_do_dispositivo,
+    dispositivo_confiavel,
     verificar_senha,
 )
 
@@ -111,7 +111,7 @@ def login(dados: LoginIn, request: Request, response: Response, db: Session = De
     email = dados.email.lower()
     chaves = (f"ip:{ip_do_cliente(request)}", f"email:{email}")
     usuario = db.scalar(select(Usuario).where(Usuario.email == email))
-    confiavel = usuario is not None and usuario_do_dispositivo(request.cookies.get(COOKIE_DISPOSITIVO)) == usuario.id
+    confiavel = dispositivo_confiavel(request.cookies.get(COOKIE_DISPOSITIVO), usuario)
     marca = reservar_tentativa(*chaves, dispositivo_confiavel=confiavel)
     if usuario is None or not verificar_senha(dados.senha, usuario.senha_hash):
         raise HTTPException(status_code=401, detail="E-mail ou senha incorretos.")
@@ -131,6 +131,7 @@ def me(usuario: Usuario = Depends(get_current_user)) -> UsuarioOut:
 @router.post("/auth/trocar-senha", response_model=TokenOut)
 def trocar_senha(
     dados: TrocarSenhaIn,
+    response: Response,
     usuario: Usuario = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> TokenOut:
@@ -138,4 +139,5 @@ def trocar_senha(
         raise HTTPException(status_code=400, detail="A senha atual está incorreta.")
     definir_senha(usuario, dados.nova_senha)
     db.commit()
+    _marcar_dispositivo(response, usuario)
     return TokenOut(access_token=criar_token(usuario), usuario=UsuarioOut.model_validate(usuario))

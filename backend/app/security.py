@@ -50,22 +50,26 @@ def criar_token_dispositivo(usuario: Usuario) -> str:
     payload = {
         "sub": str(usuario.id),
         "tipo": TIPO_DISPOSITIVO,
+        "ver": usuario.token_versao,
         "iat": agora,
         "exp": agora + timedelta(days=DIAS_DISPOSITIVO),
     }
     return jwt.encode(payload, get_settings().jwt_secret, algorithm=ALGORITMO_JWT)
 
 
-def usuario_do_dispositivo(token: str | None) -> int | None:
-    if not token:
-        return None
+def dispositivo_confiavel(token: str | None, usuario: Usuario | None) -> bool:
+    """Aparelho onde a usuária já entrou; deixa de valer quando a senha muda."""
+    if not token or usuario is None:
+        return False
     try:
         payload = jwt.decode(token, get_settings().jwt_secret, algorithms=[ALGORITMO_JWT])
-        if payload.get("tipo") != TIPO_DISPOSITIVO:
-            return None
-        return int(payload["sub"])
+        return (
+            payload.get("tipo") == TIPO_DISPOSITIVO
+            and int(payload["sub"]) == usuario.id
+            and int(payload["ver"]) == usuario.token_versao
+        )
     except (jwt.PyJWTError, KeyError, ValueError, TypeError):
-        return None
+        return False
 
 
 def _sessao_invalida() -> HTTPException:
