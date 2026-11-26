@@ -253,12 +253,13 @@ def alterar_ativo(
     produto_id: int,
     dados: AtivoIn,
     db: Session = Depends(get_db),
-    _usuario: Usuario = Depends(get_current_user),
+    usuario: Usuario = Depends(get_current_user),
 ) -> ProdutoOut:
     produto, _ = _carregar(db, produto_id)
     produto.ativo = dados.ativo
     produto.atualizado_em = datetime.now(timezone.utc)
-    db.commit()
+    db.flush()
+    _reavaliar_alerta(db, produto, usuario)
     return _resposta(db, produto_id)
 
 

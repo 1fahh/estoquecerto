@@ -228,6 +228,16 @@
   padding-top: 40px;
 }
 
+.produtos-inativos {
+  align-self: center;
+  margin: 12px var(--gutter);
+}
+
+.produtos-abas[hidden],
+.produtos-dica[hidden] {
+  display: none;
+}
+
 @media (min-width: 900px) {
   .produtos {
     width: 100%;

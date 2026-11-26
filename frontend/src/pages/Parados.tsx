@@ -4,15 +4,16 @@ import { EmptyState } from '../components/EmptyState';
 import { Loading } from '../components/Loading';
 import { PageHeader } from '../components/PageHeader';
 import { formatMoeda, formatNumero } from '../format';
-import type { ParadosOut } from '../types';
+import type { ConfiguracoesOut, ParadosOut } from '../types';
 import { plural } from './relatorios/periodo';
 import './Parados.css';
 
-const PERIODOS = [30, 60, 90] as const;
-type Periodo = (typeof PERIODOS)[number];
+const PERIODOS = [30, 60, 90];
+const PERIODO_PADRAO = 30;
 
 export function Parados() {
-  const [dias, setDias] = useState<Periodo>(30);
+  const [dias, setDias] = useState<number | null>(null);
+  const [configurado, setConfigurado] = useState(PERIODO_PADRAO);
   const [dados, setDados] = useState<ParadosOut | null>(null);
   const [erro, setErro] = useState<string | null>(null);
   const [tentativa, setTentativa] = useState(0);
@@ -20,6 +21,23 @@ export function Parados() {
   const [erroCsv, setErroCsv] = useState<string | null>(null);
 
   useEffect(() => {
+    let ativo = true;
+    api
+      .get<ConfiguracoesOut>('/configuracoes')
+      .then((configuracoes) => configuracoes.periodo_parado_dias)
+      .catch(() => PERIODO_PADRAO)
+      .then((periodo) => {
+        if (!ativo) return;
+        setConfigurado(periodo);
+        setDias(periodo);
+      });
+    return () => {
+      ativo = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (dias === null) return;
     let ativo = true;
     setDados(null);
     setErro(null);
@@ -49,6 +67,7 @@ export function Parados() {
   }
 
   const quantidade = dados?.itens.length ?? 0;
+  const opcoes = [...new Set([...PERIODOS, configurado])].sort((a, b) => a - b);
 
   return (
     <main className="page parados">
@@ -71,7 +90,7 @@ export function Parados() {
             <span className="parados-total-rotulo">Dinheiro parado na prateleira</span>
             <span className="parados-total-valor">{formatMoeda(dados.total_valor)}</span>
             <span className="parados-total-texto">
-              {quantidade} {plural(quantidade, 'produto', 'produtos')} sem nenhuma saída há mais de {dias} dias
+              {quantidade} {plural(quantidade, 'produto', 'produtos')} sem nenhuma saída há mais de {dados.dias} dias
             </span>
           </section>
 
@@ -80,7 +99,7 @@ export function Parados() {
               Sem saída há
             </span>
             <div role="radiogroup" aria-labelledby="parados-periodo-rotulo" className="parados-chips">
-              {PERIODOS.map((opcao) => (
+              {opcoes.map((opcao) => (
                 <button
                   key={opcao}
                   type="button"
@@ -89,7 +108,7 @@ export function Parados() {
                   className="parados-chip"
                   onClick={() => setDias(opcao)}
                 >
-                  {opcao === 30 ? '30 dias' : opcao}
+                  {opcao === opcoes[0] ? `${opcao} dias` : opcao}
                 </button>
               ))}
             </div>
@@ -110,7 +129,7 @@ export function Parados() {
             <EmptyState
               icone="relogio"
               titulo="Nenhum produto parado"
-              texto={`Todo produto com saldo teve saída nos últimos ${dias} dias.`}
+              texto={`Todo produto com saldo teve saída nos últimos ${dados.dias} dias.`}
             />
           ) : (
             <ul className="parados-lista">
