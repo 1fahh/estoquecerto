@@ -136,6 +136,16 @@ Para configurar: *Settings > Secrets and variables > Actions > New repository se
 
 Baixe o artifact pela aba *Actions* da execução desejada. Guarde uma cópia fora do GitHub se precisar de retenção maior que 30 dias.
 
+### Backup manual com teste de restauração
+
+Enquanto o GitHub Actions não iniciar os workflows desta conta, gere o backup de uma máquina com Docker:
+
+```bash
+DATABASE_URL='postgresql://...' scripts/backup.sh
+```
+
+O script salva o dump em `~/Backups/estoquecerto` (legível só pelo seu usuário), restaura num PostgreSQL 17 temporário e compara a contagem de linhas de cada tabela com a origem. O arquivo contém e-mails e hashes de senha: não o envie ao repositório.
+
 ### Restaurar um dump
 
 Em um banco vazio (ou em um branch novo do Neon, recomendado para conferir antes):

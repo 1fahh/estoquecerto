@@ -83,6 +83,8 @@ Um achado só vira correção depois que outro agente, tentando derrubá-lo, con
 ## Pendentes de decisão (não alterados)
 
 ### D1. Alerta de produto inativado continua ativo no painel, em /alertas e no CSV de reposição
+**Resolvido em 26/11/2026** (ver `EVIDENCIAS-DE-TESTE.md`).
+
 Severidade: alta. Arquivo: `backend/app/routers/produtos.py`
 
 Escolher a semântica (decisão de produto) e aplicar: (a) mínimo: filtrar Produto.ativo em services/relatorios.py alertas_ativos() (linhas 82-86), em routers/alertas.py listar_alertas e nas contagens do painel, para que alertas de inativos saiam de Painel, /alertas e CSV; ou (b) mais consistente: em routers/produtos.py alterar_ativo, ao inativar, encerrar o alerta ativo (situacao='encerrado', encerrado_em) e, ao reativar, chamar _reavaliar_alerta. Em ambos os casos, considerar também bloquear PUT em produto inativo (hoje retorna 200) ou documentar a exceção. Atualizar SPEC/RN06 para dizer o que acontece na inativação.
@@ -103,6 +105,8 @@ Severidade: alta. Arquivo: `frontend/src/pages/Ajuste.tsx`
 Permitir digitar a contagem física no cartão "Eu contei" (input type="text" inputMode="decimal", aceitando vírgula, validando ≥ 0 e até 3 casas, como o backend), mantendo os botões ±1 como atalho. Com isso o front envia quantidade_contada como já faz; o backend (AjusteIn / _variacao_do_ajuste) já aceita o valor. Precisa de decisão de design: o F-Ajuste.dc.html atual não tem campo digitável, então é preciso atualizar o desenho/SPEC (linha 181) antes de mudar a tela. Alternativa menor: passo de ±1 com inteiros que zere a fração (ex.: botão que arredonda para o inteiro seguinte), mas isso não cobre contagem de 2,3 L. Nenhum teste automatizado foi pedido; não editei o repositório.
 
 ### D5. Editar produto inativo cria alerta novo (e e-mail) para produto inativo
+**Resolvido em 26/11/2026** (ver `EVIDENCIAS-DE-TESTE.md`).
+
 Severidade: media. Arquivo: `backend/app/routers/produtos.py`
 
 Decisão de produto antes de codar: (1) em estoque.avaliar_alerta (ou em _reavaliar_alerta), se produto.ativo é False, não criar alerta nem enviar e-mail (tratar como encerrar ou ignorar), e (2) decidir se a inativação (alterar_ativo em routers/produtos.py) deve encerrar alertas ativos do produto, e se alertas_ativos/GET /alertas/painel devem filtrar Produto.ativo. Hoje a regra de inativo só existe em registrar_movimentacao (409). Ajustar também a descrição do relato: RN09 não menciona alertas; a base é a intenção, não o texto literal. Não é correção de uma linha; precisa de confirmação do dono.
@@ -173,6 +177,8 @@ Severidade: baixa. Arquivo: `backend/app/security.py`
 Não corrigir sem decisão de produto. Opções: (a) validar o tamanho em bytes UTF-8 <= 72 em TrocarSenhaIn (field_validator), na CLI (criar-usuario/redefinir-senha, inclusive com --senha) e no ADMIN_PASSWORD do startup, respondendo 422 com mensagem clara; isso não altera hashes existentes. (b) pré-hash (SHA-256 + base64) antes do bcrypt, o que muda o formato do hash e exige prefixo/versão para não quebrar senhas já gravadas. (c) aceitar e documentar o limite no SPEC. Atenção: bcrypt 5.x passa a levantar ValueError acima de 72 bytes em vez de truncar, e verificar_senha captura ValueError e devolve False, então um upgrade de dependência sem tratamento faria logins com senhas longas falharem silenciosamente e hash_senha lançar erro. Qualquer mudança deve travar a versão ou tratar isso antes de atualizar o bcrypt.
 
 ### D19. Tela Parados ignora o período de parados configurado
+**Resolvido em 26/11/2026** (ver `EVIDENCIAS-DE-TESTE.md`).
+
 Severidade: baixa. Arquivo: `frontend/src/pages/Parados.tsx`
 
 Em Parados.tsx, buscar /configuracoes ao montar e usar periodo_parado_dias como valor inicial de dias, em vez de 30 fixo. Decidir se o seletor inclui o valor configurado quando ele não é 30/60/90 (e se o CSV da tela segue o mesmo período). Ajustar a SPEC.md linha 183 se o seletor fixo for mantido de propósito. Não mudar a frase, que já usa dias.
