@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { api, qs } from '../api';
 import { BottomNav } from '../components/BottomNav';
 import { EmptyState } from '../components/EmptyState';
@@ -73,6 +73,22 @@ function classeDe(movimentacao: MovimentacaoOut): string {
   return 'historico-qtd-ajuste';
 }
 
+async function somarSaidas(produtoId: ProdutoOut['id'], de: string, ate: string): Promise<number> {
+  let soma = 0;
+  let offset = 0;
+  let total = 0;
+  do {
+    const lista = await api.get<MovimentacaoLista>(
+      `/movimentacoes${qs({ produto_id: produtoId, tipo: 'saida', de, ate, limite: LIMITE_SAIDAS_MEDIA, offset })}`,
+    );
+    soma += lista.itens.reduce((acumulado, movimento) => acumulado + movimento.quantidade, 0);
+    offset += lista.itens.length;
+    total = lista.total;
+    if (lista.itens.length === 0) break;
+  } while (offset < total);
+  return soma;
+}
+
 export function Historico() {
   const [produto, setProduto] = useState<ProdutoOut | null>(null);
   const [escolhendoProduto, setEscolhendoProduto] = useState(false);
@@ -86,12 +102,15 @@ export function Historico() {
   const [erro, setErro] = useState<string | null>(null);
   const [detalheProduto, setDetalheProduto] = useState<ProdutoOut | null>(null);
   const [mediaSaida, setMediaSaida] = useState<number | null>(null);
+  const geracao = useRef(0);
 
   const intervalo = periodo === 'datas' ? datas : janelaIso(Number(periodo));
   const { de, ate } = intervalo;
 
   useEffect(() => {
     let ativo = true;
+    geracao.current += 1;
+    setCarregandoMais(false);
     setCarregando(true);
     setErro(null);
     api
@@ -121,15 +140,9 @@ export function Historico() {
       return;
     }
     let ativo = true;
-    Promise.all([
-      api.get<ProdutoOut>(`/produtos/${produto.id}`),
-      api.get<MovimentacaoLista>(
-        `/movimentacoes${qs({ produto_id: produto.id, tipo: 'saida', de, ate, limite: LIMITE_SAIDAS_MEDIA })}`,
-      ),
-    ])
-      .then(([detalhe, saidas]) => {
+    Promise.all([api.get<ProdutoOut>(`/produtos/${produto.id}`), somarSaidas(produto.id, de, ate)])
+      .then(([detalhe, soma]) => {
         if (!ativo) return;
-        const soma = saidas.itens.reduce((acumulado, movimento) => acumulado + movimento.quantidade, 0);
         setDetalheProduto(detalhe);
         setMediaSaida(soma > 0 ? soma / diasNoPeriodo(de, ate) : null);
       })
@@ -145,18 +158,22 @@ export function Historico() {
   }, [produto, de, ate]);
 
   async function carregarMais() {
+    const geracaoAtual = geracao.current;
     setCarregandoMais(true);
     setErro(null);
     try {
       const lista = await api.get<MovimentacaoLista>(
         `/movimentacoes${qs({ produto_id: produto?.id, tipo: tipo === 'todos' ? null : tipo, de, ate, limite: TAMANHO_PAGINA, offset: itens.length })}`,
       );
+      if (geracaoAtual !== geracao.current) return;
       setItens((atuais) => [...atuais, ...lista.itens]);
       setTotal(lista.total);
     } catch (falha) {
-      setErro(falha instanceof Error ? falha.message : 'Não foi possível carregar mais registros.');
+      if (geracaoAtual === geracao.current) {
+        setErro(falha instanceof Error ? falha.message : 'Não foi possível carregar mais registros.');
+      }
     } finally {
-      setCarregandoMais(false);
+      if (geracaoAtual === geracao.current) setCarregandoMais(false);
     }
   }
 
@@ -199,7 +216,14 @@ export function Historico() {
           <div className="historico-selects">
             <label className="campo">
               <span className="campo-rotulo">Período</span>
-              <select value={periodo} onChange={(evento) => setPeriodo(evento.target.value as Periodo)}>
+              <select
+                value={periodo}
+                onChange={(evento) => {
+                  const novo = evento.target.value as Periodo;
+                  if (novo === 'datas') setDatas(janelaIso(Number(periodo)));
+                  setPeriodo(novo);
+                }}
+              >
                 {PERIODOS.map((item) => (
                   <option key={item.valor} value={item.valor}>
                     {item.rotulo}

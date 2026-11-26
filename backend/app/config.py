@@ -40,6 +40,8 @@ class Settings(BaseSettings):
     def jwt_secret_obrigatorio(cls, valor: str) -> str:
         if not valor.strip():
             raise ValueError("JWT_SECRET é obrigatória: configure a variável de ambiente.")
+        if len(valor) < 32:
+            raise ValueError("JWT_SECRET precisa ter pelo menos 32 caracteres: use um valor longo e aleatório.")
         return valor
 
     @field_validator("database_url")

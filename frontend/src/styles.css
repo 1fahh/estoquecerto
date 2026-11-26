@@ -84,7 +84,7 @@ p {
   min-height: 100dvh;
   margin: 0 auto;
   background: var(--bg);
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .page {

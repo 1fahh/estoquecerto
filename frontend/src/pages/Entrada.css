@@ -9,6 +9,10 @@
   min-width: 0;
 }
 
+.entrada-titulo .texto-secundario {
+  overflow-wrap: anywhere;
+}
+
 .entrada-cartao {
   display: flex;
   flex-direction: column;
@@ -143,7 +147,6 @@
   background: transparent;
   font-size: 18px;
   font-weight: 800;
-  outline: none;
   min-width: 0;
 }
 

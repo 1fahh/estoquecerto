@@ -8,6 +8,6 @@ export function ProtectedRoute({ children }: { children: ReactNode }) {
   const local = useLocation();
 
   if (carregando) return <Loading />;
-  if (!usuario) return <Navigate to="/login" replace state={{ from: local.pathname }} />;
+  if (!usuario) return <Navigate to="/login" replace state={{ from: local.pathname + local.search + local.hash }} />;
   return <>{children}</>;
 }

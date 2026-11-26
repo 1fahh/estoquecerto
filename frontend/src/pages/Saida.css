@@ -85,6 +85,7 @@
 .saida-quantidades .saida-outra[aria-checked='true'] {
   border: 1.5px solid var(--primary);
   background: var(--primary-soft);
+  color: var(--primary);
 }
 
 .saida-entrada-outra {

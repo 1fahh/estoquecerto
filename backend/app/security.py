@@ -11,6 +11,7 @@ from app.db import get_db
 from app.models import Usuario
 
 ALGORITMO_JWT = "HS256"
+LIMITE_ID_INT4 = 2147483647
 _bearer = HTTPBearer(auto_error=False)
 
 
@@ -93,6 +94,9 @@ def get_current_user(
         usuario_id = int(payload["sub"])
         versao = int(payload["ver"])
     except (jwt.PyJWTError, KeyError, ValueError, TypeError):
+        raise _sessao_invalida()
+    if not 1 <= usuario_id <= LIMITE_ID_INT4:
+        # Id fora de int4 não existe no banco; recusar antes evita estourar a consulta.
         raise _sessao_invalida()
     usuario = db.get(Usuario, usuario_id)
     if usuario is None or usuario.token_versao != versao:

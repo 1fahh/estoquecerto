@@ -102,9 +102,9 @@ Os testes rodam contra o Postgres indicado em `TEST_DATABASE_URL` (ou `DATABASE_
 | Variável | Padrão | Descrição |
 |---|---|---|
 | `DATABASE_URL` | obrigatória | URL `postgresql://` do Neon. O código troca o prefixo para `postgresql+psycopg://` e remove `channel_binding` |
-| `JWT_SECRET` | obrigatória em produção | Chave de assinatura do token. Use um valor longo e aleatório |
+| `JWT_SECRET` | obrigatória em produção | Chave de assinatura do token, com no mínimo 32 caracteres (o app não sobe com menos). Use um valor longo e aleatório |
 | `JWT_EXPIRE_DAYS` | `7` | Validade do token |
-| `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `ADMIN_NOME` | — | Usuária criada no startup se o banco não tiver nenhum usuário |
+| `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `ADMIN_NOME` | — | Usuária criada no startup se o banco não tiver nenhum usuário (senha com no mínimo 8 caracteres) |
 | `EMAIL_ENABLED` | `false` | `true` liga o envio real dos alertas |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM` | — | Servidor de saída (STARTTLS) |
 | `ALERT_EMAIL_TO` | e-mail da usuária | Destinatário dos alertas |
@@ -146,6 +146,8 @@ pg_restore --no-owner --no-acl --clean --if-exists \
 ```
 
 `--clean --if-exists` apaga os objetos existentes antes de recriar. Use-o apenas no banco de destino certo. Para conferir, rode `psql "$URL_DO_BANCO_DESTINO" -c "select count(*) from movimentacoes;"` e compare com a produção.
+
+O dump é gerado com cliente PostgreSQL 17 e contém `SET transaction_timeout = 0;`, que um servidor PostgreSQL 16 não reconhece. Ao restaurar nele, o `pg_restore` restaura os dados mas termina com código 1 (`errors ignored on restore: 1`); isso não indica perda de dados, mas um script que pare no primeiro erro vai parar no meio. Não use `--exit-on-error` nesse procedimento: com ele, o restore para antes de criar qualquer tabela.
 
 ### Point-in-time restore (Neon)
 

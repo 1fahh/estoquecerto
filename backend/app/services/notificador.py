@@ -44,12 +44,13 @@ def enviar_alerta(
         logger.warning("E-mail não enviado: SMTP ou destinatário não configurado (alerta %s).", alerta.id)
         return False
 
-    mensagem = EmailMessage()
-    mensagem["Subject"] = assunto
-    mensagem["From"] = settings.smtp_from
-    mensagem["To"] = para
-    mensagem.set_content(_corpo(produto, saldo, limite, link))
     try:
+        # Montar a mensagem também fica no try: um nome com quebra de linha não pode derrubar a operação.
+        mensagem = EmailMessage()
+        mensagem["Subject"] = assunto
+        mensagem["From"] = settings.smtp_from
+        mensagem["To"] = para
+        mensagem.set_content(_corpo(produto, saldo, limite, link))
         with smtplib.SMTP(settings.smtp_host, settings.smtp_port, timeout=TIMEOUT_SMTP_SEGUNDOS) as smtp:
             smtp.starttls()
             if settings.smtp_user and settings.smtp_password:

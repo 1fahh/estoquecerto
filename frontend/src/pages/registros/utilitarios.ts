@@ -1,4 +1,5 @@
 import type { Location, NavigateFunction } from 'react-router-dom';
+import { ApiError } from '../../api';
 
 export function lerNumero(texto: string): number | null {
   const apenasNumeros = texto.replace(/[^\d.,]/g, '');
@@ -19,6 +20,16 @@ export function voltarOuIr(navegar: NavigateFunction, local: Location): void {
   }
 }
 
+// Erros de validação do FastAPI/Pydantic (422 com detail em lista) vêm em inglês.
+// Mensagens de regra de negócio do backend já são em português e não entram aqui.
+const VALIDACAO_EM_INGLES = /(^|\s)(Input should|Field required|String should|Extra inputs)/;
+
 export function mensagemDeFalha(falha: unknown): string {
+  if (falha instanceof ApiError) {
+    if (falha.status === 422 && VALIDACAO_EM_INGLES.test(falha.message)) {
+      return 'Valor inválido. Confira os dados e tente novamente.';
+    }
+    return falha.message.replace(/Value error, /g, '');
+  }
   return falha instanceof Error ? falha.message : 'Não foi possível concluir a operação. Tente novamente.';
 }

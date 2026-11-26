@@ -5,6 +5,7 @@ from typing import Literal
 
 from fastapi import APIRouter, Depends, File, HTTPException, Response, UploadFile
 from sqlalchemy import case, delete, func, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.db import get_db
@@ -99,7 +100,7 @@ def _campos(db: Session, dados: ProdutoEdicaoIn, atual: Produto | None = None) -
         if db.scalar(consulta) is not None:
             raise HTTPException(status_code=409, detail="Já existe um produto com este código.")
     if "percentual_alerta" in dados.model_fields_set:
-        percentual = dados.percentual_alerta
+        percentual = _centavos(dados.percentual_alerta)
     elif atual is not None:
         percentual = atual.percentual_alerta
     else:
@@ -204,7 +205,12 @@ def criar_produto(
 ) -> ProdutoOut:
     produto = Produto(**_campos(db, dados))
     db.add(produto)
-    db.flush()
+    try:
+        db.flush()
+    except IntegrityError:
+        # Duas requisições com o mesmo código: a checagem por SELECT pode ter passado nas duas.
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Já existe um produto com este código.")
     if dados.quantidade_inicial:
         estoque.registrar_movimentacao(
             db,
@@ -233,7 +239,11 @@ def atualizar_produto(
     for campo, valor in _campos(db, dados, produto).items():
         setattr(produto, campo, valor)
     produto.atualizado_em = datetime.now(timezone.utc)
-    db.flush()
+    try:
+        db.flush()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Já existe um produto com este código.")
     _reavaliar_alerta(db, produto, usuario)
     return _resposta(db, produto_id)
 

@@ -114,7 +114,7 @@ function FormularioPreferencias() {
     setErro(null);
     setSucesso(false);
     const diasParado = Number(periodo);
-    const percentualPadrao = Number(percentual.replace(',', '.'));
+    const percentualPadrao = percentual.trim() ? Number(percentual.replace(',', '.')) : NaN;
     if (!Number.isInteger(diasParado) || diasParado < 1 || diasParado > 365) {
       setErro('O período de produto parado deve ser de 1 a 365 dias.');
       return;

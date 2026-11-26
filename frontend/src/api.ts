@@ -62,6 +62,17 @@ function mensagemDeErro(corpo: unknown): string {
   return MENSAGEM_PADRAO;
 }
 
+const MENSAGEM_REDE = 'Sem conexão com o servidor. Verifique sua internet e tente novamente.';
+
+async function buscar(url: string, opcoes: RequestInit): Promise<Response> {
+  try {
+    return await fetch(url, opcoes);
+  } catch (falha) {
+    if (falha instanceof TypeError) throw new ApiError(MENSAGEM_REDE, 0);
+    throw falha;
+  }
+}
+
 type Opcoes = Omit<RequestInit, 'body'> & { json?: unknown; body?: BodyInit };
 
 async function requisitar<T>(caminho: string, opcoes: Opcoes = {}): Promise<T> {
@@ -74,7 +85,7 @@ async function requisitar<T>(caminho: string, opcoes: Opcoes = {}): Promise<T> {
     headers.set('Content-Type', 'application/json');
     body = JSON.stringify(json);
   }
-  const resposta = await fetch(`/api${caminho}`, { ...resto, headers, body });
+  const resposta = await buscar(`/api${caminho}`, { ...resto, headers, body });
 
   if (resposta.status === 401 && !caminho.startsWith('/auth/login')) {
     clearToken();
@@ -105,7 +116,7 @@ export async function baixarCsv(caminho: string, nomePadrao: string): Promise<vo
   const headers = new Headers();
   const token = getToken();
   if (token) headers.set('Authorization', `Bearer ${token}`);
-  const resposta = await fetch(`/api${caminho}`, { headers });
+  const resposta = await buscar(`/api${caminho}`, { headers });
   if (resposta.status === 401) {
     clearToken();
     window.dispatchEvent(new Event(EVENTO_SESSAO_EXPIRADA));

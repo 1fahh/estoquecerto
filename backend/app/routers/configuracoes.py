@@ -5,6 +5,7 @@ from app.db import get_db
 from app.models import Configuracao, Usuario
 from app.schemas import ConfigIn, ConfigOut
 from app.security import get_current_user
+from app.services.estoque import CENTAVOS
 
 router = APIRouter()
 
@@ -31,6 +32,6 @@ def atualizar(
 ) -> ConfigOut:
     configuracao = obter_configuracao(db)
     configuracao.periodo_parado_dias = dados.periodo_parado_dias
-    configuracao.percentual_alerta_padrao = dados.percentual_alerta_padrao
+    configuracao.percentual_alerta_padrao = dados.percentual_alerta_padrao.quantize(CENTAVOS)
     db.commit()
     return ConfigOut.model_validate(configuracao)

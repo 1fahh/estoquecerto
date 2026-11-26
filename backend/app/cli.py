@@ -15,6 +15,8 @@ CODIGO_DEMO = "OL-5W30"
 
 def _pedir_senha(senha: str | None) -> str:
     if senha:
+        if len(senha) < 8:
+            raise SystemExit("A senha precisa ter pelo menos 8 caracteres.")
         return senha
     confirmacao = getpass.getpass("Senha (mín. 8 caracteres): ")
     if len(confirmacao) < 8:

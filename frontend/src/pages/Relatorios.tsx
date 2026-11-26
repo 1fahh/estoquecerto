@@ -174,11 +174,21 @@ export function Relatorios() {
           <div className="relatorios-datas">
             <label className="campo">
               <span className="campo-rotulo">De</span>
-              <input type="date" value={de} max={ate} onChange={(evento) => setPeriodo({ de: evento.target.value, ate })} />
+              <input
+                type="date"
+                value={de}
+                max={ate}
+                onChange={(evento) => evento.target.value && setPeriodo({ de: evento.target.value, ate })}
+              />
             </label>
             <label className="campo">
               <span className="campo-rotulo">Até</span>
-              <input type="date" value={ate} min={de} onChange={(evento) => setPeriodo({ de, ate: evento.target.value })} />
+              <input
+                type="date"
+                value={ate}
+                min={de}
+                onChange={(evento) => evento.target.value && setPeriodo({ de, ate: evento.target.value })}
+              />
             </label>
           </div>
           <p className="texto-secundario">{formatarPeriodo(de, ate)}</p>
