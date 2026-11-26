@@ -115,7 +115,7 @@ Quantidades são `NUMERIC(12,3)` (aceita litros fracionados); dinheiro `NUMERIC(
 - Ao **editar** produto (mínimo/percentual) também roda `avaliar_alerta`.
 - **Produtos parados** (RN07): `ativo` e `saldo > 0` e nenhuma `saida` nos últimos `dias` (padrão = configuração, 30). `dias_parado` = dias desde a última saída, ou desde a primeira movimentação se nunca saiu.
 - **Valor imobilizado** (RN08) = `saldo × custo_unitario`, só quando há custo; produtos sem custo vêm com `valor = null` e não somam no total.
-- **Inativação** (RN09): `DELETE /api/produtos/{id}` só apaga se o produto não tem movimentações; senão 409 `"Produto com movimentações não pode ser excluído; inative-o."`. Inativar = `PATCH` com `ativo=false`. Inativos somem das listas de registro (`?ativo=true` por padrão) mas seguem no histórico.
+- **Inativação** (RN09): `DELETE /api/produtos/{id}` só apaga se o produto não tem movimentações; senão 409 `"Produto com movimentações não pode ser excluído; inative-o."`. Inativar = `PATCH` com `ativo=false`. Inativos somem das listas de registro (`?ativo=true` por padrão) mas seguem no histórico. Produto inativo não tem alerta ativo: inativar encerra o alerta e reativar o reavalia. A tela Produtos lista os inativos em "Ver produtos inativos".
 
 ## 6. API REST (prefixo `/api`, JSON, datas ISO 8601, números decimais como **number** no JSON)
 
@@ -180,7 +180,7 @@ Objeto **ProdutoOut**: `{id, nome, codigo, categoria_id, categoria_nome, unidade
 | `/entrada?produto=` | Antes → Depois, quantidade, custo unitário (total calculado), fornecedor opcional com chips dos usados antes, aviso de alerta encerrado | `F-Entrada.dc.html` (alternativa visual em `F-Entrada-alt.dc.html`, não usar) |
 | `/ajuste?produto=` | No sistema × Eu contei (± ), diferença, motivo obrigatório em opções + detalhe | `F-Ajuste.dc.html` |
 | `/historico` | Filtros (produto, tipo, período); com produto escolhido mostra gráfico de barras do saldo + tabela com saldo após cada registro | `F-Historico.dc.html` |
-| `/parados` | Total imobilizado, período 30/60/90, lista com saldo × custo e dias, baixar CSV | `F-Parados.dc.html` |
+| `/parados` | Total imobilizado, período inicial vindo das configurações (atalhos 30/60/90 e o configurado), lista com saldo × custo e dias, baixar CSV | `F-Parados.dc.html` |
 | `/relatorios` | Período + 4 relatórios com botão baixar (estoque, movimentações, parados, reposição) + link Importar CSV | `F-Exportar.dc.html` |
 | `/alertas` | Lista de alertas ativos (e encerrados recentes) | estilo das listas |
 | `/importar` | Upload CSV + link do modelo + resultado (criados/ignorados) | estilo dos formulários |
