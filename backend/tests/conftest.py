@@ -42,7 +42,7 @@ _URL_SCHEMA = (
 )
 os.environ["DATABASE_URL"] = _URL_SCHEMA
 os.environ["DB_SCHEMA"] = SCHEMA_TESTE
-os.environ.setdefault("JWT_SECRET", "segredo-de-teste")
+os.environ.setdefault("JWT_SECRET", "segredo-de-teste-com-pelo-menos-32-caracteres")
 
 from app.db import engine as engine_app  # noqa: E402
 from app.main import app  # noqa: E402

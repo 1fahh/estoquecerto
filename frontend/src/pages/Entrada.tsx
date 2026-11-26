@@ -94,8 +94,9 @@ export function Entrada() {
   const quantidade = lerNumero(quantidadeTexto);
   const quantidadeValida = quantidade !== null && quantidade > 0;
   const custo = lerNumero(custoTexto);
+  const custoInvalido = custoTexto.trim() !== '' && custo === null;
   const total = quantidadeValida && custo !== null ? arredondar(quantidade * custo) : null;
-  const podeConfirmar = produto !== null && quantidadeValida && !enviando;
+  const podeConfirmar = produto !== null && quantidadeValida && !custoInvalido && !enviando;
 
   const depois = produto !== null && quantidadeValida ? arredondar(produto.saldo + quantidade) : null;
   const novoLimite = produto !== null && quantidadeValida ? limiteAposEntrada(produto, quantidade) : null;
@@ -210,6 +211,11 @@ export function Entrada() {
                   />
                 </span>
                 {total !== null && <span className="entrada-total">total {formatMoeda(total)}</span>}
+                {custoInvalido && (
+                  <span className="campo-erro" role="alert">
+                    Custo inválido. Use só números, como 12,50.
+                  </span>
+                )}
               </label>
 
               <label className="entrada-linha">

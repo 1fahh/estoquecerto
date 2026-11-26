@@ -1,7 +1,9 @@
 import ipaddress
+import secrets
 import threading
 import time
 from collections import defaultdict, deque
+from functools import lru_cache
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from sqlalchemy import select
@@ -18,6 +20,7 @@ from app.security import (
     definir_senha,
     get_current_user,
     dispositivo_confiavel,
+    hash_senha,
     verificar_senha,
 )
 
@@ -106,6 +109,12 @@ def _marcar_dispositivo(response: Response, usuario: Usuario) -> None:
     )
 
 
+@lru_cache(maxsize=1)
+def _hash_ficticio() -> str:
+    # Hash de referência (mesmo custo do bcrypt real) para gastar o mesmo tempo quando a conta não existe.
+    return hash_senha(secrets.token_urlsafe(32))
+
+
 @router.post("/auth/login", response_model=TokenOut)
 def login(dados: LoginIn, request: Request, response: Response, db: Session = Depends(get_db)) -> TokenOut:
     email = dados.email.lower()
@@ -113,7 +122,9 @@ def login(dados: LoginIn, request: Request, response: Response, db: Session = De
     usuario = db.scalar(select(Usuario).where(Usuario.email == email))
     confiavel = dispositivo_confiavel(request.cookies.get(COOKIE_DISPOSITIVO), usuario)
     marca = reservar_tentativa(*chaves, dispositivo_confiavel=confiavel)
-    if usuario is None or not verificar_senha(dados.senha, usuario.senha_hash):
+    hash_conferido = usuario.senha_hash if usuario is not None else _hash_ficticio()
+    senha_correta = verificar_senha(dados.senha, hash_conferido)
+    if usuario is None or not senha_correta:
         raise HTTPException(status_code=401, detail="E-mail ou senha incorretos.")
     liberar_tentativa(marca, *chaves)
     _marcar_dispositivo(response, usuario)

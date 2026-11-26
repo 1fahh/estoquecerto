@@ -32,6 +32,9 @@ def inicio_do_dia(dia: date) -> datetime:
 
 
 def fim_do_dia(dia: date) -> datetime:
+    if dia == date.max:
+        # Não há dia seguinte a 9999-12-31; o fim do intervalo é o maior instante representável.
+        return datetime.max.replace(tzinfo=timezone.utc)
     return inicio_do_dia(dia + timedelta(days=1))
 
 

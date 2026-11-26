@@ -109,6 +109,10 @@ export function Saida() {
     if (quantidade !== null && podeConfirmar) void registrar(quantidade);
   }
 
+  const fecharSeLivre = useCallback(() => {
+    if (!enviando) fechar();
+  }, [enviando, fechar]);
+
   if (concluido) {
     const unidade = concluido.movimentacao.unidade;
     const detalheToast =
@@ -123,7 +127,7 @@ export function Saida() {
 
   return (
     <main className="page saida-pagina">
-      <Sheet onFechar={fechar}>
+      <Sheet onFechar={fecharSeLivre}>
         <div className="saida-cabecalho">
           <div className="saida-titulo">
             <span className="saida-rotulo">Saída rápida</span>
@@ -136,7 +140,7 @@ export function Saida() {
               <strong className="saida-produto">Escolha o produto</strong>
             )}
           </div>
-          <button type="button" className="saida-fechar" onClick={fechar} aria-label="Fechar">
+          <button type="button" className="saida-fechar" onClick={fecharSeLivre} aria-label="Fechar">
             <Icon name="fechar" size={18} />
           </button>
         </div>

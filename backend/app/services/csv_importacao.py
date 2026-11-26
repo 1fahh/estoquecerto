@@ -6,12 +6,13 @@ from decimal import Decimal, InvalidOperation
 from typing import Any
 
 from sqlalchemy import select
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import DataError, IntegrityError
 from sqlalchemy.orm import Session
 
 from app.models import Categoria, Movimentacao, Produto, Usuario
+from app.schemas import LIMITE_CUSTO, LIMITE_QUANTIDADE
 from app.services import notificador
-from app.services.estoque import CENTAVOS, avaliar_alerta, situacoes_em_lote
+from app.services.estoque import CASAS, CENTAVOS, avaliar_alerta, situacoes_em_lote
 
 COLUNAS = (
     "nome",
@@ -59,7 +60,8 @@ def _texto(conteudo: bytes) -> str:
     try:
         return conteudo.decode("utf-8-sig")
     except UnicodeDecodeError:
-        return conteudo.decode("cp1252", errors="replace")
+        # No fallback o BOM não é removido pelo cp1252; sem isso ele gruda no nome da primeira coluna.
+        return conteudo.removeprefix(b"\xef\xbb\xbf").decode("cp1252", errors="replace")
 
 
 def _chave_coluna(titulo: str) -> str:
@@ -75,23 +77,29 @@ def ler_linhas(conteudo: bytes) -> list[tuple[int, dict[str, str]]]:
     if not conteudo.strip():
         raise ImportacaoInvalida("O arquivo está vazio.")
     texto = _texto(conteudo)
-    leitor = csv.reader(io.StringIO(texto), delimiter=_separador(texto.split("\n", 1)[0]))
-    cabecalho = [_chave_coluna(titulo) for titulo in next(leitor, [])]
-    if "nome" not in cabecalho:
-        raise ImportacaoInvalida("Cabeçalho inválido: a primeira linha precisa ter a coluna nome.")
-    linhas = []
-    for valores in leitor:
-        if not any(valor.strip() for valor in valores):
-            continue
-        registro = {
-            coluna: (valores[indice].strip() if indice < len(valores) else "")
-            for indice, coluna in enumerate(cabecalho)
-        }
-        linhas.append((leitor.line_num, registro))
+    # newline="" faz o leitor aceitar \r, \n e \r\n (planilhas antigas de Mac usam só \r).
+    fluxo = io.StringIO(texto, newline="")
+    leitor = csv.reader(fluxo, delimiter=_separador(fluxo.readline()))
+    fluxo.seek(0)
+    try:
+        cabecalho = [_chave_coluna(titulo) for titulo in next(leitor, [])]
+        if "nome" not in cabecalho:
+            raise ImportacaoInvalida("Cabeçalho inválido: a primeira linha precisa ter a coluna nome.")
+        linhas = []
+        for valores in leitor:
+            if not any(valor.strip() for valor in valores):
+                continue
+            registro = {
+                coluna: (valores[indice].strip() if indice < len(valores) else "")
+                for indice, coluna in enumerate(cabecalho)
+            }
+            linhas.append((leitor.line_num, registro))
+    except csv.Error:
+        raise ImportacaoInvalida(f"Arquivo com formato inválido a partir da linha {leitor.line_num}.")
     return linhas
 
 
-def _decimal(valor: str, campo: str) -> Decimal | None:
+def _decimal(valor: str, campo: str, limite: Decimal | None = None) -> Decimal | None:
     if not valor:
         return None
     normalizado = valor.replace(" ", "")
@@ -101,14 +109,20 @@ def _decimal(valor: str, campo: str) -> Decimal | None:
         numero = Decimal(normalizado)
     except InvalidOperation:
         raise _LinhaInvalida(f"{campo} inválido: {valor}.")
-    if not numero.is_finite() or numero < 0:
+    if not numero.is_finite():
+        raise _LinhaInvalida(f"{campo} inválido: {valor}.")
+    if numero < 0:
         raise _LinhaInvalida(f"{campo} não pode ser negativo: {valor}.")
+    if limite is not None and numero > limite:
+        raise _LinhaInvalida(f"{campo} acima do limite permitido: {valor}.")
     return numero
 
 
 def _texto_limitado(valor: str, limite: int, campo: str) -> str | None:
     if not valor:
         return None
+    if "\x00" in valor:
+        raise _LinhaInvalida(f"{campo} contém caractere inválido.")
     if len(valor) > limite:
         raise _LinhaInvalida(f"{campo} com mais de {limite} caracteres.")
     return valor
@@ -118,14 +132,17 @@ def _interpretar(registro: dict[str, str], percentual_padrao: Decimal) -> _Dados
     nome = _texto_limitado(registro.get("nome", ""), 160, "Nome")
     if nome is None:
         raise _LinhaInvalida("Nome obrigatório.")
-    custo = _decimal(registro.get("custo_unitario", ""), "Custo unitário")
-    minimo = _decimal(registro.get("estoque_minimo", ""), "Estoque mínimo")
+    custo = _decimal(registro.get("custo_unitario", ""), "Custo unitário", LIMITE_CUSTO)
+    minimo = _decimal(registro.get("estoque_minimo", ""), "Estoque mínimo", LIMITE_QUANTIDADE)
     percentual = _decimal(registro.get("percentual_alerta", ""), "Percentual de alerta")
     if percentual is None:
         percentual = percentual_padrao
     if percentual > 100:
         raise _LinhaInvalida("Percentual de alerta deve estar entre 0 e 100.")
-    quantidade = _decimal(registro.get("quantidade_inicial", ""), "Quantidade inicial")
+    quantidade = _decimal(registro.get("quantidade_inicial", ""), "Quantidade inicial", LIMITE_QUANTIDADE)
+    if quantidade is not None and quantidade != quantidade.quantize(CASAS):
+        # Sem isso o banco arredonda em silêncio e o CHECK de movimentação derruba a linha.
+        raise _LinhaInvalida("Quantidade inicial deve ter no máximo 3 casas decimais.")
     return _DadosLinha(
         nome=nome,
         codigo=_texto_limitado(registro.get("codigo", ""), 60, "Código"),
@@ -209,7 +226,10 @@ def importar_produtos(
             ignorados.append({"linha": numero, "motivo": erro.motivo})
             continue
         except IntegrityError:
-            ignorados.append({"linha": numero, "motivo": "Não foi possível gravar esta linha: dado duplicado."})
+            ignorados.append({"linha": numero, "motivo": "Não foi possível gravar esta linha: dado não aceito pelo banco."})
+            continue
+        except DataError:
+            ignorados.append({"linha": numero, "motivo": "Não foi possível gravar esta linha: valor fora da faixa permitida."})
             continue
         categorias.update(novas)
         if dados.codigo is not None:

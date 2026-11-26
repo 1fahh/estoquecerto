@@ -39,8 +39,19 @@ type Formulario = {
 function lerDecimal(texto: string): number | null {
   const limpo = texto.replace(/R\$/g, '').replace(/\s/g, '');
   if (!limpo) return null;
-  const milharSemDecimal = /^\d{1,3}(\.\d{3})+$/.test(limpo);
-  const normalizado = limpo.includes(',') || milharSemDecimal ? limpo.replace(/\./g, '').replace(',', '.') : limpo;
+  // Com vírgula, vale o pt-BR estrito (milhar com ponto, decimal com vírgula). Sem vírgula, ponto com 3 dígitos
+  // depois é milhar (1.000) e ponto com outros dígitos é decimal (12.5, 38.90). Outros formatos (1,000.50, 0x10, 1e3) viram null.
+  let normalizado: string;
+  if (limpo.includes(',')) {
+    if (!/^(\d{1,3}(\.\d{3})+|\d+),\d+$/.test(limpo)) return null;
+    normalizado = limpo.replace(/\./g, '').replace(',', '.');
+  } else if (/^\d{1,3}(\.\d{3})+$/.test(limpo)) {
+    normalizado = limpo.replace(/\./g, '');
+  } else if (/^\d+(\.\d+)?$/.test(limpo)) {
+    normalizado = limpo;
+  } else {
+    return null;
+  }
   const valor = Number(normalizado);
   return Number.isFinite(valor) ? valor : null;
 }
@@ -66,8 +77,8 @@ function formularioVazio(percentualPadrao: number): Formulario {
     unidade: 'un',
     custo: '',
     estoqueMinimo: '',
-    percentual: String(percentualPadrao),
-    modoOutro: false,
+    percentual: textoDecimal(percentualPadrao, 0, 2),
+    modoOutro: !PERCENTUAIS.includes(percentualPadrao),
     localizacao: '',
     observacoes: '',
     quantidadeInicial: '',

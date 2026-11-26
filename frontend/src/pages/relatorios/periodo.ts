@@ -41,6 +41,7 @@ export function diasNoPeriodo(de: string, ate: string): number {
 
 export function formatarPeriodo(de: string, ate: string): string {
   const formatar = (iso: string) => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return '—';
     const [ano, mes, dia] = partesDe(iso);
     return new Intl.DateTimeFormat('pt-BR', { day: 'numeric', month: 'long' }).format(new Date(ano, mes - 1, dia));
   };

@@ -85,6 +85,9 @@ def registrar_ajuste(
 
 def _limites_do_dia(dia: date, fim: bool = False) -> datetime:
     if fim:
+        if dia == date.max:
+            # Não há dia seguinte a 9999-12-31; o fim do intervalo é o maior instante representável.
+            return datetime.max.replace(tzinfo=timezone.utc)
         dia = dia + timedelta(days=1)
     return datetime.combine(dia, time.min, tzinfo=FUSO_NEGOCIO).astimezone(timezone.utc)
 
@@ -96,7 +99,7 @@ def listar_movimentacoes(
     de: date | None = None,
     ate: date | None = None,
     limite: int = Query(100, ge=1, le=500),
-    offset: int = Query(0, ge=0),
+    offset: int = Query(0, ge=0, le=9223372036854775807),
     db: Session = Depends(get_db),
     _: Usuario = Depends(get_current_user),
 ) -> MovLista:

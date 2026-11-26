@@ -6,6 +6,10 @@ import './Login.css';
 
 type EstadoDeRota = { from?: string } | null;
 
+function mensagemDeFalha(falha: unknown): string {
+  return falha instanceof Error ? falha.message : 'Não foi possível entrar. Tente novamente.';
+}
+
 export function Login() {
   const { usuario, login } = useAuth();
   const navigate = useNavigate();
@@ -29,7 +33,7 @@ export function Login() {
       await login(email.trim(), senha);
       navigate(destino, { replace: true });
     } catch (falha: unknown) {
-      setErro(falha instanceof Error ? falha.message : 'Não foi possível entrar. Tente novamente.');
+      setErro(mensagemDeFalha(falha));
     } finally {
       setEnviando(false);
     }
