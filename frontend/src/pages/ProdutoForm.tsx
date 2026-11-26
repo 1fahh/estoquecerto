@@ -341,308 +341,311 @@ export function ProdutoForm() {
       )}
 
       <form className="pf-formulario" onSubmit={salvar} noValidate>
-        <section className="pf-secao">
-          <h2 className="pf-titulo">
-            <span className="pf-numero">1</span>O que é
-          </h2>
+        <div className="pf-coluna-principal">
+          <section className="pf-secao">
+            <h2 className="pf-titulo">
+              <span className="pf-numero">1</span>O que é
+            </h2>
 
-          <label className="pf-campo">
-            <span className="pf-rotulo">Nome</span>
-            <input
-              type="text"
-              value={form.nome}
-              onChange={(evento) => atualizar({ nome: evento.target.value })}
-              maxLength={160}
-              required
-            />
-          </label>
+            <label className="pf-campo">
+              <span className="pf-rotulo">Nome</span>
+              <input
+                type="text"
+                value={form.nome}
+                onChange={(evento) => atualizar({ nome: evento.target.value })}
+                maxLength={160}
+                required
+              />
+            </label>
 
-          <div className="pf-rotulo">Categoria</div>
-          <div className="pf-chips">
-            {categorias.map((categoria) => {
-              const marcada = form.categoriaId === categoria.id;
-              return (
+            <div className="pf-rotulo">Categoria</div>
+            <div className="pf-chips">
+              {categorias.map((categoria) => {
+                const marcada = form.categoriaId === categoria.id;
+                return (
+                  <button
+                    key={categoria.id}
+                    type="button"
+                    className="pf-chip"
+                    aria-pressed={marcada}
+                    onClick={() => {
+                      atualizar({ categoriaId: marcada ? null : categoria.id });
+                      setCategoriaEditada(null);
+                      setErroCategoriaEditada(null);
+                    }}
+                  >
+                    {categoria.nome}
+                  </button>
+                );
+              })}
+              <button
+                type="button"
+                className="pf-chip pf-chip-nova"
+                onClick={() => {
+                  setCategoriaNova(categoriaNova === null ? '' : null);
+                  setErroCategoria(null);
+                }}
+              >
+                + Nova
+              </button>
+            </div>
+
+            {categoriaNova !== null && (
+              <div className="pf-categoria-nova">
+                <input
+                  type="text"
+                  placeholder="Nome da categoria"
+                  aria-label="Nome da nova categoria"
+                  value={categoriaNova}
+                  maxLength={80}
+                  onChange={(evento) => setCategoriaNova(evento.target.value)}
+                  onKeyDown={(evento) => {
+                    if (evento.key === 'Enter') {
+                      evento.preventDefault();
+                      void criarCategoria();
+                    }
+                  }}
+                />
+                <button type="button" className="btn btn-primario pf-botao-compacto" onClick={() => void criarCategoria()}>
+                  Criar
+                </button>
+              </div>
+            )}
+            {erroCategoria && <p className="campo-erro">{erroCategoria}</p>}
+
+            {form.categoriaId !== null && categoriaEditada === null && (
+              <button
+                type="button"
+                className="pf-botao-texto"
+                onClick={() =>
+                  setCategoriaEditada(categorias.find((item) => item.id === form.categoriaId)?.nome ?? '')
+                }
+              >
+                Renomear categoria selecionada
+              </button>
+            )}
+
+            {categoriaEditada !== null && (
+              <div className="pf-categoria-nova">
+                <input
+                  type="text"
+                  aria-label="Novo nome da categoria"
+                  value={categoriaEditada}
+                  maxLength={80}
+                  onChange={(evento) => setCategoriaEditada(evento.target.value)}
+                  onKeyDown={(evento) => {
+                    if (evento.key === 'Enter') {
+                      evento.preventDefault();
+                      void renomearCategoria();
+                    }
+                  }}
+                />
+                <button type="button" className="btn btn-primario pf-botao-compacto" onClick={() => void renomearCategoria()}>
+                  Salvar
+                </button>
                 <button
-                  key={categoria.id}
                   type="button"
-                  className="pf-chip"
-                  aria-pressed={marcada}
+                  className="pf-botao-texto"
                   onClick={() => {
-                    atualizar({ categoriaId: marcada ? null : categoria.id });
                     setCategoriaEditada(null);
                     setErroCategoriaEditada(null);
                   }}
                 >
-                  {categoria.nome}
-                </button>
-              );
-            })}
-            <button
-              type="button"
-              className="pf-chip pf-chip-nova"
-              onClick={() => {
-                setCategoriaNova(categoriaNova === null ? '' : null);
-                setErroCategoria(null);
-              }}
-            >
-              + Nova
-            </button>
-          </div>
-
-          {categoriaNova !== null && (
-            <div className="pf-categoria-nova">
-              <input
-                type="text"
-                placeholder="Nome da categoria"
-                aria-label="Nome da nova categoria"
-                value={categoriaNova}
-                maxLength={80}
-                onChange={(evento) => setCategoriaNova(evento.target.value)}
-                onKeyDown={(evento) => {
-                  if (evento.key === 'Enter') {
-                    evento.preventDefault();
-                    void criarCategoria();
-                  }
-                }}
-              />
-              <button type="button" className="btn btn-primario pf-botao-compacto" onClick={() => void criarCategoria()}>
-                Criar
-              </button>
-            </div>
-          )}
-          {erroCategoria && <p className="campo-erro">{erroCategoria}</p>}
-
-          {form.categoriaId !== null && categoriaEditada === null && (
-            <button
-              type="button"
-              className="pf-botao-texto"
-              onClick={() =>
-                setCategoriaEditada(categorias.find((item) => item.id === form.categoriaId)?.nome ?? '')
-              }
-            >
-              Renomear categoria selecionada
-            </button>
-          )}
-
-          {categoriaEditada !== null && (
-            <div className="pf-categoria-nova">
-              <input
-                type="text"
-                aria-label="Novo nome da categoria"
-                value={categoriaEditada}
-                maxLength={80}
-                onChange={(evento) => setCategoriaEditada(evento.target.value)}
-                onKeyDown={(evento) => {
-                  if (evento.key === 'Enter') {
-                    evento.preventDefault();
-                    void renomearCategoria();
-                  }
-                }}
-              />
-              <button type="button" className="btn btn-primario pf-botao-compacto" onClick={() => void renomearCategoria()}>
-                Salvar
-              </button>
-              <button
-                type="button"
-                className="pf-botao-texto"
-                onClick={() => {
-                  setCategoriaEditada(null);
-                  setErroCategoriaEditada(null);
-                }}
-              >
-                Cancelar
-              </button>
-            </div>
-          )}
-          {erroCategoriaEditada && <p className="campo-erro">{erroCategoriaEditada}</p>}
-
-          <div className="pf-linha-dupla">
-            <label className="pf-campo">
-              <span className="pf-rotulo">Unidade</span>
-              <select value={form.unidade} onChange={(evento) => atualizar({ unidade: evento.target.value })}>
-                {UNIDADES.map((item) => (
-                  <option key={item.valor} value={item.valor}>
-                    {item.rotulo}
-                  </option>
-                ))}
-                {!unidadeConhecida && <option value={form.unidade}>{form.unidade}</option>}
-              </select>
-            </label>
-            <label className="pf-campo">
-              <span className="pf-rotulo">
-                Código <span className="pf-opcional">(opcional)</span>
-              </span>
-              <input
-                type="text"
-                value={form.codigo}
-                maxLength={60}
-                onChange={(evento) => atualizar({ codigo: evento.target.value })}
-              />
-            </label>
-          </div>
-
-          {!editando && (
-            <label className="pf-campo">
-              <span className="pf-rotulo">Quanto tem agora</span>
-              <input
-                type="text"
-                inputMode="decimal"
-                placeholder="0"
-                value={form.quantidadeInicial}
-                onChange={(evento) => atualizar({ quantidadeInicial: evento.target.value })}
-              />
-              <span className="pf-ajuda">Conte o que há na oficina hoje. Esse número vira o saldo inicial.</span>
-            </label>
-          )}
-        </section>
-
-        <section className="pf-secao">
-          <h2 className="pf-titulo">
-            <span className="pf-numero">2</span>Quanto custa e onde fica
-          </h2>
-
-          <div className="pf-linha-dupla">
-            <label className="pf-campo">
-              <span className="pf-rotulo">Custo por {rotuloCurto(form.unidade)} (R$)</span>
-              <input
-                type="text"
-                inputMode="decimal"
-                placeholder="0,00"
-                value={form.custo}
-                onChange={(evento) => atualizar({ custo: evento.target.value })}
-              />
-            </label>
-            <label className="pf-campo">
-              <span className="pf-rotulo">Localização</span>
-              <input
-                type="text"
-                value={form.localizacao}
-                maxLength={120}
-                onChange={(evento) => atualizar({ localizacao: evento.target.value })}
-              />
-            </label>
-          </div>
-
-          <label className="pf-campo">
-            <span className="pf-rotulo">
-              Observações <span className="pf-opcional">(opcional)</span>
-            </span>
-            <textarea
-              value={form.observacoes}
-              rows={3}
-              onChange={(evento) => atualizar({ observacoes: evento.target.value })}
-            />
-          </label>
-        </section>
-
-        <section className="pf-secao">
-          <h2 className="pf-titulo">
-            <span className="pf-numero pf-numero-alerta">3</span>Quando me avisar
-          </h2>
-
-          <span className="pf-rotulo">Quando sobrar menos de</span>
-          <div className="pf-percentuais">
-            {PERCENTUAIS.map((percentual) => {
-              const marcado = !form.modoOutro && form.percentual === String(percentual);
-              return (
-                <button
-                  key={percentual}
-                  type="button"
-                  className="pf-percentual"
-                  aria-pressed={marcado}
-                  onClick={() => atualizar({ percentual: String(percentual), modoOutro: false })}
-                >
-                  {percentual}%
-                </button>
-              );
-            })}
-            <button
-              type="button"
-              className="pf-percentual pf-percentual-texto"
-              aria-pressed={form.modoOutro}
-              onClick={() =>
-                atualizar({
-                  modoOutro: true,
-                  percentual: PERCENTUAIS.map(String).includes(form.percentual) ? '' : form.percentual,
-                })
-              }
-            >
-              Outro
-            </button>
-          </div>
-
-          {form.modoOutro && (
-            <label className="pf-campo">
-              <span className="pf-rotulo">Percentual personalizado (0 a 100)</span>
-              <input
-                type="text"
-                inputMode="decimal"
-                placeholder="Ex.: 15"
-                value={form.percentual}
-                onChange={(evento) => atualizar({ percentual: evento.target.value })}
-              />
-            </label>
-          )}
-
-          <label className="pf-minimo">
-            <span className="pf-rotulo">Nunca menos que (mínimo fixo)</span>
-            <input
-              type="text"
-              inputMode="decimal"
-              placeholder="—"
-              value={form.estoqueMinimo}
-              onChange={(evento) => atualizar({ estoqueMinimo: evento.target.value })}
-            />
-          </label>
-
-          <p className="pf-previa">
-            {referencia > 0 ? (
-              <>
-                Referência: {produto ? 'a última entrada' : 'a quantidade inicial'} foi de{' '}
-                <strong>{formatQuantidade(referencia, form.unidade)}</strong>. O aviso chega quando restarem{' '}
-                <strong>{formatQuantidade(limite, form.unidade)}</strong> — hoje há{' '}
-                <strong>{formatQuantidade(saldo, form.unidade)}</strong>
-                {emAlerta ? ', então este produto já está em alerta.' : ', então ainda não está em alerta.'}
-              </>
-            ) : (
-              <>
-                Ainda não há referência para calcular o aviso. Com a primeira entrada, ele passa a seguir o percentual
-                escolhido
-                {minimo > 0 ? ` e nunca fica abaixo de ${formatNumero(minimo)} ${form.unidade}` : ''}.
-              </>
-            )}
-          </p>
-        </section>
-
-        {erro && (
-          <p className="mensagem-erro pf-erro" role="alert">
-            {erro}
-          </p>
-        )}
-        {aviso && <p className="pf-aviso">{aviso}</p>}
-
-        <div className="pf-rodape">
-          <button type="submit" className="btn btn-primario btn-bloco pf-salvar" disabled={salvando}>
-            {salvando ? 'Salvando…' : 'Salvar'}
-          </button>
-
-          {editando && produto && (
-            <>
-              <div className="pf-acoes-secundarias">
-                <Link to={`/ajuste?produto=${produto.id}`} className="pf-link">
-                  Conferir saldo (contagem)
-                </Link>
-                <button type="button" className="pf-botao-texto" disabled={ocupado} onClick={() => void alternarAtivo()}>
-                  {produto.ativo ? 'Inativar produto' : 'Reativar produto'}
+                  Cancelar
                 </button>
               </div>
-              {produto.ultima_movimentacao_em === null && (
-                <button type="button" className="pf-excluir" disabled={ocupado} onClick={() => void excluir()}>
-                  Excluir produto
-                </button>
+            )}
+            {erroCategoriaEditada && <p className="campo-erro">{erroCategoriaEditada}</p>}
+
+            <div className="pf-linha-dupla">
+              <label className="pf-campo">
+                <span className="pf-rotulo">Unidade</span>
+                <select value={form.unidade} onChange={(evento) => atualizar({ unidade: evento.target.value })}>
+                  {UNIDADES.map((item) => (
+                    <option key={item.valor} value={item.valor}>
+                      {item.rotulo}
+                    </option>
+                  ))}
+                  {!unidadeConhecida && <option value={form.unidade}>{form.unidade}</option>}
+                </select>
+              </label>
+              <label className="pf-campo">
+                <span className="pf-rotulo">
+                  Código <span className="pf-opcional">(opcional)</span>
+                </span>
+                <input
+                  type="text"
+                  value={form.codigo}
+                  maxLength={60}
+                  onChange={(evento) => atualizar({ codigo: evento.target.value })}
+                />
+              </label>
+            </div>
+
+            {!editando && (
+              <label className="pf-campo">
+                <span className="pf-rotulo">Quanto tem agora</span>
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  placeholder="0"
+                  value={form.quantidadeInicial}
+                  onChange={(evento) => atualizar({ quantidadeInicial: evento.target.value })}
+                />
+                <span className="pf-ajuda">Conte o que há na oficina hoje. Esse número vira o saldo inicial.</span>
+              </label>
+            )}
+          </section>
+
+          <section className="pf-secao">
+            <h2 className="pf-titulo">
+              <span className="pf-numero">2</span>Quanto custa e onde fica
+            </h2>
+
+            <div className="pf-linha-dupla">
+              <label className="pf-campo">
+                <span className="pf-rotulo">Custo por {rotuloCurto(form.unidade)} (R$)</span>
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  placeholder="0,00"
+                  value={form.custo}
+                  onChange={(evento) => atualizar({ custo: evento.target.value })}
+                />
+              </label>
+              <label className="pf-campo">
+                <span className="pf-rotulo">Localização</span>
+                <input
+                  type="text"
+                  value={form.localizacao}
+                  maxLength={120}
+                  onChange={(evento) => atualizar({ localizacao: evento.target.value })}
+                />
+              </label>
+            </div>
+
+            <label className="pf-campo">
+              <span className="pf-rotulo">
+                Observações <span className="pf-opcional">(opcional)</span>
+              </span>
+              <textarea
+                value={form.observacoes}
+                rows={3}
+                onChange={(evento) => atualizar({ observacoes: evento.target.value })}
+              />
+            </label>
+          </section>
+        </div>
+        <div className="pf-coluna-lateral">
+          <section className="pf-secao">
+            <h2 className="pf-titulo">
+              <span className="pf-numero pf-numero-alerta">3</span>Quando me avisar
+            </h2>
+
+            <span className="pf-rotulo">Quando sobrar menos de</span>
+            <div className="pf-percentuais">
+              {PERCENTUAIS.map((percentual) => {
+                const marcado = !form.modoOutro && form.percentual === String(percentual);
+                return (
+                  <button
+                    key={percentual}
+                    type="button"
+                    className="pf-percentual"
+                    aria-pressed={marcado}
+                    onClick={() => atualizar({ percentual: String(percentual), modoOutro: false })}
+                  >
+                    {percentual}%
+                  </button>
+                );
+              })}
+              <button
+                type="button"
+                className="pf-percentual pf-percentual-texto"
+                aria-pressed={form.modoOutro}
+                onClick={() =>
+                  atualizar({
+                    modoOutro: true,
+                    percentual: PERCENTUAIS.map(String).includes(form.percentual) ? '' : form.percentual,
+                  })
+                }
+              >
+                Outro
+              </button>
+            </div>
+
+            {form.modoOutro && (
+              <label className="pf-campo">
+                <span className="pf-rotulo">Percentual personalizado (0 a 100)</span>
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  placeholder="Ex.: 15"
+                  value={form.percentual}
+                  onChange={(evento) => atualizar({ percentual: evento.target.value })}
+                />
+              </label>
+            )}
+
+            <label className="pf-minimo">
+              <span className="pf-rotulo">Nunca menos que (mínimo fixo)</span>
+              <input
+                type="text"
+                inputMode="decimal"
+                placeholder="—"
+                value={form.estoqueMinimo}
+                onChange={(evento) => atualizar({ estoqueMinimo: evento.target.value })}
+              />
+            </label>
+
+            <p className="pf-previa">
+              {referencia > 0 ? (
+                <>
+                  Referência: {produto ? 'a última entrada' : 'a quantidade inicial'} foi de{' '}
+                  <strong>{formatQuantidade(referencia, form.unidade)}</strong>. O aviso chega quando restarem{' '}
+                  <strong>{formatQuantidade(limite, form.unidade)}</strong> — hoje há{' '}
+                  <strong>{formatQuantidade(saldo, form.unidade)}</strong>
+                  {emAlerta ? ', então este produto já está em alerta.' : ', então ainda não está em alerta.'}
+                </>
+              ) : (
+                <>
+                  Ainda não há referência para calcular o aviso. Com a primeira entrada, ele passa a seguir o percentual
+                  escolhido
+                  {minimo > 0 ? ` e nunca fica abaixo de ${formatNumero(minimo)} ${form.unidade}` : ''}.
+                </>
               )}
-            </>
+            </p>
+          </section>
+
+          {erro && (
+            <p className="mensagem-erro pf-erro" role="alert">
+              {erro}
+            </p>
           )}
+          {aviso && <p className="pf-aviso">{aviso}</p>}
+
+          <div className="pf-rodape">
+            <button type="submit" className="btn btn-primario btn-bloco pf-salvar" disabled={salvando}>
+              {salvando ? 'Salvando…' : 'Salvar'}
+            </button>
+
+            {editando && produto && (
+              <>
+                <div className="pf-acoes-secundarias">
+                  <Link to={`/ajuste?produto=${produto.id}`} className="pf-link">
+                    Conferir saldo (contagem)
+                  </Link>
+                  <button type="button" className="pf-botao-texto" disabled={ocupado} onClick={() => void alternarAtivo()}>
+                    {produto.ativo ? 'Inativar produto' : 'Reativar produto'}
+                  </button>
+                </div>
+                {produto.ultima_movimentacao_em === null && (
+                  <button type="button" className="pf-excluir" disabled={ocupado} onClick={() => void excluir()}>
+                    Excluir produto
+                  </button>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </form>
     </div>

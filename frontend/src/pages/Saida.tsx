@@ -122,7 +122,7 @@ export function Saida() {
   }
 
   return (
-    <main className="page">
+    <main className="page saida-pagina">
       <Sheet onFechar={fechar}>
         <div className="saida-cabecalho">
           <div className="saida-titulo">

@@ -314,3 +314,78 @@
   font-weight: 700;
   cursor: pointer;
 }
+
+.pf-coluna-principal,
+.pf-coluna-lateral {
+  display: contents;
+}
+
+@media (min-width: 900px) {
+  .produto-form {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+    gap: 20px;
+    padding: 32px 40px 48px;
+  }
+
+  .pf-formulario {
+    gap: 20px;
+  }
+
+  .pf-secao {
+    gap: 16px;
+    padding: 24px;
+  }
+
+  .produto-form .pf-salvar {
+    align-self: flex-end;
+    width: auto;
+    min-width: 240px;
+  }
+
+  .produto-form .pf-rodape {
+    gap: 10px;
+  }
+
+  .produto-form .pf-link,
+  .produto-form .pf-botao-texto {
+    padding: 0;
+  }
+}
+
+@media (min-width: 1100px) {
+  .produto-form {
+    max-width: 1100px;
+  }
+
+  .pf-formulario {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
+    align-items: start;
+    gap: 20px;
+  }
+
+  .pf-coluna-principal,
+  .pf-coluna-lateral {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+  }
+
+  .pf-coluna-principal {
+    grid-column: 1;
+  }
+
+  .pf-coluna-lateral {
+    grid-column: 2;
+    position: sticky;
+    top: 24px;
+  }
+
+  .produto-form .pf-salvar {
+    align-self: stretch;
+    width: 100%;
+  }
+}

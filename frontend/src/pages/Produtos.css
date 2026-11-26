@@ -223,3 +223,123 @@
 .produtos > .empty-state {
   padding-top: 40px;
 }
+
+@media (min-width: 900px) {
+  .produtos {
+    width: 100%;
+    max-width: 1120px;
+    margin: 0 auto;
+    gap: 20px;
+    padding: 32px 40px 48px;
+    background: var(--bg);
+  }
+
+  .produtos-topo {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 16px;
+    padding: 0;
+    border-bottom: 0;
+  }
+
+  .produtos-busca-linha {
+    flex: 1 1 360px;
+  }
+
+  .produtos-busca {
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .produtos-busca:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-soft);
+  }
+
+  .produtos-novo {
+    transition: background-color 0.15s ease;
+  }
+
+  .produtos-novo:hover {
+    background: var(--primary-strong);
+  }
+
+  .produtos-abas {
+    flex: 1 1 100%;
+    background: var(--border);
+  }
+
+  .produtos-abas button {
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .produtos-topo > .texto-secundario {
+    flex: 0 0 100%;
+  }
+
+  .produtos-aviso {
+    padding: 0;
+  }
+
+  .produtos > .empty-state {
+    padding: 48px 24px;
+    border-radius: var(--radius-card);
+    background: var(--surface);
+  }
+
+  .produtos-lista {
+    overflow: hidden;
+    border-radius: var(--radius-card);
+    background: var(--surface);
+  }
+
+  .produtos-linha {
+    gap: 14px;
+    padding: 12px 20px;
+    transition: background-color 0.15s ease;
+  }
+
+  .produtos-linha:last-child {
+    border-bottom: 0;
+  }
+
+  .produtos-linha:hover {
+    background: var(--bg);
+  }
+
+  .produtos-nome strong {
+    font-size: 16px;
+  }
+
+  .produtos-acao {
+    transition: background-color 0.15s ease;
+  }
+
+  .produtos-acao-saida:hover {
+    background: var(--primary-soft);
+  }
+
+  .produtos-acao-entrada:hover {
+    background: var(--primary-on);
+  }
+
+  .produtos-dica {
+    margin: 0;
+    padding: 16px 20px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+}
+
+@media (min-width: 1100px) {
+  .produtos-busca-linha {
+    max-width: 560px;
+  }
+
+  .produtos-abas {
+    flex: 0 0 360px;
+    margin-left: auto;
+  }
+}

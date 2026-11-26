@@ -48,3 +48,53 @@
 .alertas-item-encerrado .alertas-item-nome {
   color: var(--text-2);
 }
+
+@media (min-width: 900px) {
+  .alertas {
+    --page-max: 1000px;
+  }
+
+  .alertas-abas {
+    align-self: flex-start;
+    width: 100%;
+    max-width: 440px;
+  }
+
+  .alertas-lista.lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: 16px;
+    padding: 0;
+    border-radius: 0;
+    background: none;
+  }
+
+  .alertas-lista.lista > li {
+    display: flex;
+    flex-direction: column;
+    padding: 18px 20px;
+    border-radius: var(--radius-card);
+    background: var(--surface);
+  }
+
+  .alertas-item {
+    gap: 12px;
+    padding: 0;
+    border-bottom: 0;
+  }
+
+  .alertas-item-nome {
+    font-size: 16px;
+  }
+
+  .alertas-item-detalhe {
+    font-size: 14px;
+  }
+
+  .alertas-item .btn {
+    width: auto;
+    min-height: 44px;
+    align-self: flex-start;
+    padding: 0 20px;
+  }
+}

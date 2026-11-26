@@ -127,79 +127,83 @@ export function Ajuste() {
       {!carregandoProduto && !produto && <ProdutoEscolha onSelecionar={escolherProduto} />}
 
       {!carregandoProduto && produto && (
-        <>
-          <div className="ajuste-contagem">
-            <div className="ajuste-cartao">
-              <span className="ajuste-cartao-rotulo">No sistema</span>
-              <span className="ajuste-cartao-valor ajuste-sistema">{formatNumero(produto.saldo)}</span>
-              <span className="texto-secundario">{produto.unidade}</span>
-            </div>
-            <div className="ajuste-cartao ajuste-cartao-contado">
-              <span className="ajuste-cartao-rotulo ajuste-cartao-rotulo-destaque">Eu contei</span>
-              <span className="ajuste-cartao-valor">{formatNumero(contado)}</span>
-              <div className="ajuste-passos">
-                <button type="button" aria-label="Menos um" onClick={() => ajustarContagem(-1)} disabled={contado <= 0}>
-                  <Icon name="menos" size={18} />
-                </button>
-                <button type="button" aria-label="Mais um" onClick={() => ajustarContagem(1)}>
-                  <Icon name="mais" size={18} />
-                </button>
+        <div className="ajuste-corpo">
+          <div className="ajuste-coluna-contagem">
+            <div className="ajuste-contagem">
+              <div className="ajuste-cartao">
+                <span className="ajuste-cartao-rotulo">No sistema</span>
+                <span className="ajuste-cartao-valor ajuste-sistema">{formatNumero(produto.saldo)}</span>
+                <span className="texto-secundario">{produto.unidade}</span>
+              </div>
+              <div className="ajuste-cartao ajuste-cartao-contado">
+                <span className="ajuste-cartao-rotulo ajuste-cartao-rotulo-destaque">Eu contei</span>
+                <span className="ajuste-cartao-valor">{formatNumero(contado)}</span>
+                <div className="ajuste-passos">
+                  <button type="button" aria-label="Menos um" onClick={() => ajustarContagem(-1)} disabled={contado <= 0}>
+                    <Icon name="menos" size={18} />
+                  </button>
+                  <button type="button" aria-label="Mais um" onClick={() => ajustarContagem(1)}>
+                    <Icon name="mais" size={18} />
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className={semDiferenca ? 'ajuste-diferenca ajuste-diferenca-ok' : 'ajuste-diferenca'}>
-            <span>Diferença</span>
-            <strong>
-              {semDiferenca
-                ? 'Nada a ajustar'
-                : `${diferenca > 0 ? '+' : '−'}${formatQuantidade(Math.abs(diferenca), produto.unidade)}`}
-            </strong>
-          </div>
-
-          <section className="ajuste-motivos">
-            <h2 className="ajuste-secao-titulo">
-              O que aconteceu? <span>(obrigatório)</span>
-            </h2>
-            <div role="radiogroup" aria-label="Motivo do ajuste" className="ajuste-opcoes">
-              {MOTIVOS.map((opcao) => {
-                const selecionado = motivo === opcao.valor;
-                return (
-                  <button
-                    key={opcao.valor}
-                    type="button"
-                    role="radio"
-                    aria-checked={selecionado}
-                    className={selecionado ? 'ajuste-opcao ajuste-opcao-selecionada' : 'ajuste-opcao'}
-                    onClick={() => setMotivo(opcao.valor)}
-                  >
-                    <span className="ajuste-opcao-bolinha" aria-hidden="true" />
-                    {opcao.rotulo}
-                  </button>
-                );
-              })}
+            <div className={semDiferenca ? 'ajuste-diferenca ajuste-diferenca-ok' : 'ajuste-diferenca'}>
+              <span>Diferença</span>
+              <strong>
+                {semDiferenca
+                  ? 'Nada a ajustar'
+                  : `${diferenca > 0 ? '+' : '−'}${formatQuantidade(Math.abs(diferenca), produto.unidade)}`}
+              </strong>
             </div>
-            <label className="ajuste-detalhe">
-              Detalhe (opcional)
-              <input
-                type="text"
-                placeholder="Ex.: contagem de 25/11"
-                maxLength={160}
-                value={detalhe}
-                onChange={(evento) => setDetalhe(evento.target.value)}
-              />
-            </label>
-          </section>
-
-          {erroEnvio && <p className="campo-erro" role="alert">{erroEnvio}</p>}
-
-          <div className="ajuste-rodape">
-            <button type="button" className="btn btn-primario ajuste-salvar" disabled={!podeSalvar} onClick={salvar}>
-              {enviando ? 'Salvando…' : 'Salvar ajuste'}
-            </button>
-            <span className="ajuste-aviso">Fica no histórico. Nada é apagado.</span>
           </div>
-        </>
+
+          <div className="ajuste-coluna-motivo">
+            <section className="ajuste-motivos">
+              <h2 className="ajuste-secao-titulo">
+                O que aconteceu? <span>(obrigatório)</span>
+              </h2>
+              <div role="radiogroup" aria-label="Motivo do ajuste" className="ajuste-opcoes">
+                {MOTIVOS.map((opcao) => {
+                  const selecionado = motivo === opcao.valor;
+                  return (
+                    <button
+                      key={opcao.valor}
+                      type="button"
+                      role="radio"
+                      aria-checked={selecionado}
+                      className={selecionado ? 'ajuste-opcao ajuste-opcao-selecionada' : 'ajuste-opcao'}
+                      onClick={() => setMotivo(opcao.valor)}
+                    >
+                      <span className="ajuste-opcao-bolinha" aria-hidden="true" />
+                      {opcao.rotulo}
+                    </button>
+                  );
+                })}
+              </div>
+              <label className="ajuste-detalhe">
+                Detalhe (opcional)
+                <input
+                  type="text"
+                  placeholder="Ex.: contagem de 25/11"
+                  maxLength={160}
+                  value={detalhe}
+                  onChange={(evento) => setDetalhe(evento.target.value)}
+                />
+              </label>
+            </section>
+
+            {erroEnvio && <p className="campo-erro" role="alert">{erroEnvio}</p>}
+
+            <div className="ajuste-rodape">
+              <button type="button" className="btn btn-primario ajuste-salvar" disabled={!podeSalvar} onClick={salvar}>
+                {enviando ? 'Salvando…' : 'Salvar ajuste'}
+              </button>
+              <span className="ajuste-aviso">Fica no histórico. Nada é apagado.</span>
+            </div>
+          </div>
+        </div>
       )}
     </main>
   );

@@ -50,7 +50,7 @@ function FormularioSenha() {
   }
 
   return (
-    <section className="conta-secao" aria-labelledby="conta-senha">
+    <section className="conta-secao conta-secao-senha" aria-labelledby="conta-senha">
       <h2 id="conta-senha">Trocar senha</h2>
       <form className="conta-form" onSubmit={enviar} noValidate>
         <label className="campo">
@@ -137,7 +137,7 @@ function FormularioPreferencias() {
   }
 
   return (
-    <section className="conta-secao" aria-labelledby="conta-preferencias">
+    <section className="conta-secao conta-secao-preferencias" aria-labelledby="conta-preferencias">
       <h2 id="conta-preferencias">Preferências do estoque</h2>
       {carregando && <Loading texto="Carregando preferências…" />}
       {!carregando && !config && (
@@ -181,10 +181,10 @@ export function Conta() {
   }
 
   return (
-    <main className="page">
+    <main className="page conta">
       <PageHeader titulo="Conta" voltarPara="/" />
 
-      <section className="conta-secao" aria-labelledby="conta-dados">
+      <section className="conta-secao conta-secao-acesso" aria-labelledby="conta-dados">
         <h2 id="conta-dados">Seu acesso</h2>
         <div className="conta-dados">
           <strong>{usuario?.nome}</strong>

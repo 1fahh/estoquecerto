@@ -225,3 +225,99 @@
   color: var(--muted);
   white-space: nowrap;
 }
+
+@media (min-width: 900px) {
+  .historico {
+    --page-max: 1200px;
+    padding-top: 32px;
+  }
+
+  .historico .historico-filtros {
+    padding: 20px 24px;
+  }
+
+  .historico .historico-produto .chip {
+    gap: 8px;
+  }
+
+  .historico .historico-grafico {
+    padding: 20px 24px;
+  }
+
+  .historico-barras {
+    height: 180px;
+  }
+
+  .historico-barra {
+    justify-self: center;
+    width: 100%;
+    max-width: 56px;
+  }
+
+  .historico-dia {
+    padding: 0 24px;
+  }
+
+  .historico-dia-titulo {
+    margin-top: 16px;
+  }
+
+  .historico-item {
+    grid-template-columns: 52px minmax(0, 1fr) 72px 96px;
+    gap: 14px;
+    min-height: 60px;
+    padding: 12px 0;
+    font-size: 14px;
+  }
+
+  .historico-hora {
+    font-size: 13px;
+  }
+
+  .historico-valores {
+    display: contents;
+  }
+
+  .historico-qtd,
+  .historico-saldo {
+    justify-self: end;
+    text-align: right;
+  }
+
+  .historico .historico-dia .historico-item:last-child {
+    border-bottom: 0;
+  }
+
+  .historico .btn-bloco {
+    align-self: center;
+    width: 280px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .historico .historico-filtros {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px;
+  }
+
+  .historico .historico-produto {
+    flex: 1 1 200px;
+  }
+
+  .historico .historico-selects,
+  .historico .historico-datas {
+    display: contents;
+  }
+
+  .historico .historico-filtros .campo {
+    flex: 0 0 170px;
+  }
+
+  .historico-item {
+    grid-template-columns: 72px minmax(0, 1fr) 120px 140px;
+    gap: 20px;
+    font-size: 15px;
+  }
+}
