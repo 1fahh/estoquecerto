@@ -138,7 +138,8 @@ def avaliar_alerta(
     ativo = db.scalar(
         select(Alerta).where(Alerta.produto_id == produto.id, Alerta.situacao == "ativo")
     )
-    if estado.em_alerta:
+    # Produto inativo saiu de uso (RN09): não gera alerta, e o que estiver aberto é encerrado.
+    if estado.em_alerta and produto.ativo:
         if ativo is not None:
             return "mantido", ativo
         alerta = Alerta(
