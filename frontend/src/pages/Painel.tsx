@@ -137,7 +137,7 @@ export function Painel() {
                 </div>
               ))}
 
-              <p className="painel-nota">Barra = saldo em relação ao limite de reposição. Avisos também por e-mail.</p>
+              <p className="painel-nota">Barra = saldo em relação ao limite de reposição. Em breve: avisos também por e-mail.</p>
             </section>
 
             <div className="painel-numeros">
