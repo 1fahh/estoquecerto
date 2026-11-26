@@ -209,3 +209,125 @@
   font-weight: 600;
   color: var(--muted);
 }
+
+@media (min-width: 900px) {
+  .page.painel {
+    padding-top: 32px;
+  }
+
+  .painel-data {
+    font-size: 14px;
+  }
+
+  .painel-subtitulo {
+    font-size: 16px;
+  }
+
+  .painel-avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 16px;
+  }
+
+  .painel-acao {
+    min-height: 180px;
+    padding: 22px;
+    border-radius: 24px;
+    transition: box-shadow 0.15s ease, background-color 0.15s ease;
+  }
+
+  .painel-acao:not(.painel-acao-principal):hover,
+  .painel-numero:hover {
+    box-shadow: 0 8px 22px rgba(22, 24, 29, 0.08);
+  }
+
+  .painel-acao-principal:hover {
+    background: var(--primary-strong);
+  }
+
+  .painel-acao-icone {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+  }
+
+  .painel-acao-titulo {
+    font-size: 24px;
+  }
+
+  .painel-acao-detalhe {
+    font-size: 15px;
+  }
+
+  .painel-alertas {
+    padding: 24px;
+    gap: 16px;
+    border-radius: 24px;
+  }
+
+  .painel-alertas-titulo {
+    font-size: 18px;
+  }
+
+  .painel-item-linha {
+    font-size: 15px;
+  }
+
+  .painel-numero {
+    min-height: 96px;
+    padding: 18px 20px;
+    border-radius: 20px;
+    transition: box-shadow 0.15s ease;
+  }
+
+  .painel-numero strong {
+    font-size: 30px;
+  }
+
+  .painel-numero span {
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .page.painel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      'topo topo'
+      'acoes alertas'
+      'numeros alertas';
+    gap: 20px 24px;
+    align-items: start;
+    align-content: start;
+  }
+
+  .page.painel > .painel-topo {
+    grid-area: topo;
+  }
+
+  .page.painel > .painel-acoes {
+    grid-area: acoes;
+    align-self: start;
+  }
+
+  .page.painel > .painel-alertas {
+    grid-area: alertas;
+    align-self: stretch;
+  }
+
+  .page.painel > .painel-numeros {
+    grid-area: numeros;
+    align-self: start;
+  }
+
+  .page.painel > .painel-alertas .painel-nota {
+    margin-top: auto;
+  }
+
+  .page.painel > .card,
+  .page.painel > .loading {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}

@@ -109,3 +109,58 @@
   background: var(--alert-soft);
   color: var(--alert-ink);
 }
+
+.importar-lado {
+  display: contents;
+}
+
+@media (min-width: 900px) {
+  .importar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    align-content: start;
+    gap: 20px;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 32px 40px 48px;
+  }
+
+  .importar > :first-child {
+    grid-column: 1 / -1;
+  }
+
+  .importar-lado {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+  }
+
+  .importar-card {
+    padding: 24px;
+  }
+
+  .importar-arquivo {
+    min-height: 180px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .importar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .importar-lado {
+    align-self: stretch;
+  }
+
+  .importar-formulario {
+    flex: 1;
+  }
+
+  .importar-formulario .importar-arquivo {
+    flex: 1;
+  }
+}

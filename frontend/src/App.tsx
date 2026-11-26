@@ -1,5 +1,6 @@
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { SideNav } from './components/SideNav';
 import { Alertas } from './pages/Alertas';
 import { Ajuste } from './pages/Ajuste';
 import { Conta } from './pages/Conta';
@@ -17,7 +18,10 @@ import { Saida } from './pages/Saida';
 function AreaProtegida() {
   return (
     <ProtectedRoute>
-      <Outlet />
+      <SideNav />
+      <div className="app-conteudo">
+        <Outlet />
+      </div>
     </ProtectedRoute>
   );
 }

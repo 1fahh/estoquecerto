@@ -131,3 +131,81 @@
   font-weight: 700;
   text-decoration: none;
 }
+
+@media (min-width: 900px) {
+  .relatorios {
+    --page-max: 1000px;
+  }
+
+  .relatorios-titulo {
+    font-size: 28px;
+  }
+
+  .relatorios-periodo {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px 20px;
+  }
+
+  .relatorios-periodo > .campo-rotulo {
+    display: flex;
+    align-items: center;
+    height: 48px;
+  }
+
+  .relatorios-periodo .chip {
+    min-height: 48px;
+  }
+
+  .relatorios-periodo > .texto-secundario {
+    flex-basis: 100%;
+  }
+
+  .relatorios-datas {
+    grid-template-columns: repeat(2, minmax(0, 200px));
+  }
+
+  .relatorios-datas input {
+    min-height: 48px;
+  }
+
+  .relatorios-cartoes {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .relatorios-cartao {
+    padding: 20px;
+  }
+
+  .relatorios-cartao-texto strong {
+    font-size: 16px;
+  }
+
+  .relatorios-cartao-texto .texto-secundario {
+    font-size: 13px;
+    text-wrap: pretty;
+  }
+
+  .relatorios-baixar:hover:not(:disabled) {
+    background: var(--primary-strong);
+  }
+
+  .relatorios-importar {
+    align-self: center;
+  }
+}
+
+@media (min-width: 1100px) {
+  .relatorios-cartoes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1200px) {
+  .relatorios-datas {
+    margin-left: auto;
+  }
+}

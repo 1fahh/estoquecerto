@@ -245,7 +245,7 @@ estoquecerto/
 |---|---|---|
 | RNF01 | Saída em até 3 interações a partir do painel | `frontend/src/pages/Saida.tsx` (chips de quantidade, motivo e botão em um único painel); `Painel.tsx` com botões Saída e Entrada |
 | RNF02 | Consultas em até 2 s com 500 produtos | Consultas agregadas com `GROUP BY` e índices `(produto_id, data_hora desc)` e `(tipo, data_hora desc)`; teste de tempo em `backend/tests/` |
-| RNF03 | Responsivo, celular e desktop | `frontend/src/styles.css` (`--app-max: 480px`, sem rolagem horizontal); `components/BottomNav.tsx` |
+| RNF03 | Responsivo, celular e desktop | Abaixo de 900px: coluna de até 480px e `components/BottomNav.tsx`. A partir de 900px: `components/SideNav.tsx` e blocos `@media` no CSS de cada tela. Sem rolagem horizontal. Ver [`docs/RESPONSIVIDADE.md`](docs/RESPONSIVIDADE.md) |
 | RNF04 | Senhas com hash e HTTPS | bcrypt em `backend/app/security.py`; cabeçalhos de segurança (`Strict-Transport-Security`, `X-Frame-Options`, etc.) em `backend/app/main.py`; HTTPS pelo Render |
 | RNF05 | Coleta mínima de dados (LGPD) | Apenas nome e e-mail da usuária em `usuarios`; sem dados de clientes |
 | RNF06 | Código versionado e documentado | Repositório Git (GitHub); este README, `SPEC.md`, `docs/` |

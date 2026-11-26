@@ -151,7 +151,7 @@ export function Entrada() {
       {!carregandoProduto && !produto && <ProdutoEscolha onSelecionar={escolherProduto} />}
 
       {!carregandoProduto && produto && (
-        <>
+        <div className="entrada-corpo">
           <section className="card entrada-cartao">
             <div className="linha">
               <strong className="entrada-produto">{produto.nome}</strong>
@@ -181,68 +181,70 @@ export function Entrada() {
             )}
           </section>
 
-          <section className="entrada-campos">
-            <label className="entrada-linha">
-              <span className="entrada-numero">1</span>
-              <span className="entrada-campo">
-                <span className="entrada-campo-rotulo">Quantidade recebida ({produto.unidade})</span>
-                <input
-                  type="text"
-                  inputMode="decimal"
-                  placeholder="Ex.: 30"
-                  value={quantidadeTexto}
-                  onChange={(evento) => setQuantidadeTexto(evento.target.value)}
-                />
-              </span>
-            </label>
+          <div className="entrada-formulario">
+            <section className="entrada-campos">
+              <label className="entrada-linha">
+                <span className="entrada-numero">1</span>
+                <span className="entrada-campo">
+                  <span className="entrada-campo-rotulo">Quantidade recebida ({produto.unidade})</span>
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    placeholder="Ex.: 30"
+                    value={quantidadeTexto}
+                    onChange={(evento) => setQuantidadeTexto(evento.target.value)}
+                  />
+                </span>
+              </label>
 
-            <label className="entrada-linha">
-              <span className="entrada-numero">2</span>
-              <span className="entrada-campo">
-                <span className="entrada-campo-rotulo">Quanto pagou por unidade</span>
-                <input
-                  type="text"
-                  inputMode="decimal"
-                  placeholder="R$ 0,00"
-                  value={custoTexto}
-                  onChange={(evento) => setCustoTexto(evento.target.value)}
-                />
-              </span>
-              {total !== null && <span className="entrada-total">total {formatMoeda(total)}</span>}
-            </label>
+              <label className="entrada-linha">
+                <span className="entrada-numero">2</span>
+                <span className="entrada-campo">
+                  <span className="entrada-campo-rotulo">Quanto pagou por unidade</span>
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    placeholder="R$ 0,00"
+                    value={custoTexto}
+                    onChange={(evento) => setCustoTexto(evento.target.value)}
+                  />
+                </span>
+                {total !== null && <span className="entrada-total">total {formatMoeda(total)}</span>}
+              </label>
 
-            <label className="entrada-linha">
-              <span className="entrada-numero">3</span>
-              <span className="entrada-campo">
-                <span className="entrada-campo-rotulo">De quem comprou (opcional)</span>
-                <input
-                  type="text"
-                  placeholder="Nome do fornecedor"
-                  maxLength={160}
-                  value={fornecedor}
-                  onChange={(evento) => setFornecedor(evento.target.value)}
-                />
-              </span>
-            </label>
-          </section>
+              <label className="entrada-linha">
+                <span className="entrada-numero">3</span>
+                <span className="entrada-campo">
+                  <span className="entrada-campo-rotulo">De quem comprou (opcional)</span>
+                  <input
+                    type="text"
+                    placeholder="Nome do fornecedor"
+                    maxLength={160}
+                    value={fornecedor}
+                    onChange={(evento) => setFornecedor(evento.target.value)}
+                  />
+                </span>
+              </label>
+            </section>
 
-          {fornecedoresUsados.length > 0 && (
-            <div className="entrada-fornecedores">
-              <span className="texto-secundario">Usados antes:</span>
-              {fornecedoresUsados.map((nome) => (
-                <button key={nome} type="button" aria-pressed={fornecedor === nome} onClick={() => setFornecedor(nome)}>
-                  {nome}
-                </button>
-              ))}
-            </div>
-          )}
+            {fornecedoresUsados.length > 0 && (
+              <div className="entrada-fornecedores">
+                <span className="texto-secundario">Usados antes:</span>
+                {fornecedoresUsados.map((nome) => (
+                  <button key={nome} type="button" aria-pressed={fornecedor === nome} onClick={() => setFornecedor(nome)}>
+                    {nome}
+                  </button>
+                ))}
+              </div>
+            )}
 
-          {erroEnvio && <p className="campo-erro" role="alert">{erroEnvio}</p>}
+            {erroEnvio && <p className="campo-erro" role="alert">{erroEnvio}</p>}
 
-          <button type="button" className="btn btn-primario entrada-confirmar" disabled={!podeConfirmar} onClick={confirmar}>
-            {enviando ? 'Registrando…' : 'Confirmar entrada'}
-          </button>
-        </>
+            <button type="button" className="btn btn-primario entrada-confirmar" disabled={!podeConfirmar} onClick={confirmar}>
+              {enviando ? 'Registrando…' : 'Confirmar entrada'}
+            </button>
+          </div>
+        </div>
       )}
     </main>
   );

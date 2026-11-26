@@ -48,7 +48,7 @@ export function Alertas() {
 
   return (
     <>
-      <main className="page">
+      <main className="page alertas">
         <PageHeader titulo="Alertas" voltarPara="/" />
 
         <div className="segmented alertas-abas" role="group" aria-label="Situação dos alertas">

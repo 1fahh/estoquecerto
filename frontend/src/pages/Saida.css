@@ -157,3 +157,30 @@
 .saida-trocar {
   align-self: center;
 }
+
+@media (min-width: 900px) {
+  .saida-fechar:hover {
+    background: var(--border);
+  }
+
+  .saida-quantidades button {
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .saida-quantidades button:hover:not([aria-checked='true']) {
+    border-color: var(--primary);
+  }
+
+  .saida-motivos button {
+    transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .saida-motivos button:hover:not([aria-pressed='true']) {
+    border-color: var(--primary);
+    color: var(--primary-strong);
+  }
+
+  .saida-pagina .sheet-overlay {
+    padding-left: 272px;
+  }
+}

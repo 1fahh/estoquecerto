@@ -184,3 +184,80 @@
   font-size: 13px;
   color: var(--muted);
 }
+
+@media (min-width: 900px) {
+  .login {
+    flex-direction: row;
+    height: 100vh;
+    height: 100dvh;
+    background: #FFFFFF;
+  }
+
+  .login-topo {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 100dvh;
+    align-items: center;
+    gap: 36px;
+    padding: 48px;
+    overflow-y: auto;
+    background: var(--primary);
+  }
+
+  .login-topo > * {
+    width: 100%;
+    max-width: 460px;
+  }
+
+  .login-topo > :first-child {
+    margin-top: auto;
+  }
+
+  .login-topo > :last-child {
+    margin-bottom: auto;
+  }
+
+  .login-marca {
+    font-size: 24px;
+  }
+
+  .login-titulo {
+    font-size: 40px;
+    letter-spacing: -0.8px;
+  }
+
+  .login-folha {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 100dvh;
+    margin-top: 0;
+    align-items: center;
+    padding: 48px;
+    overflow-y: auto;
+    border-radius: 0;
+  }
+
+  .login-folha > * {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .login-folha > :first-child {
+    margin-top: auto;
+  }
+
+  .login-folha > :last-child {
+    margin-bottom: auto;
+  }
+
+  .login-folha h2 {
+    font-size: 26px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .login-topo,
+  .login-folha {
+    padding: 48px 72px;
+  }
+}

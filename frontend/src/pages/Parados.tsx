@@ -66,7 +66,7 @@ export function Parados() {
       {!dados && !erro && <Loading />}
 
       {dados && (
-        <>
+        <div className="parados-resumo">
           <section className="parados-total" aria-label="Valor imobilizado">
             <span className="parados-total-rotulo">Dinheiro parado na prateleira</span>
             <span className="parados-total-valor">{formatMoeda(dados.total_valor)}</span>
@@ -94,7 +94,11 @@ export function Parados() {
               ))}
             </div>
           </div>
+        </div>
+      )}
 
+      {dados && (
+        <div className="parados-detalhe">
           {dados.sem_custo_qtd > 0 && (
             <p className="parados-aviso" role="note">
               {dados.sem_custo_qtd} {plural(dados.sem_custo_qtd, 'produto parado não tem', 'produtos parados não têm')} custo
@@ -128,18 +132,20 @@ export function Parados() {
           )}
 
           <p className="parados-nota">Valor = saldo × custo unitário. Produtos sem custo cadastrado não entram no total.</p>
-        </>
+        </div>
       )}
 
-      {erroCsv && (
-        <p className="campo-erro" role="alert">
-          {erroCsv}
-        </p>
-      )}
+      <div className="parados-acao">
+        {erroCsv && (
+          <p className="campo-erro" role="alert">
+            {erroCsv}
+          </p>
+        )}
 
-      <button type="button" className="parados-baixar" onClick={baixar} disabled={!dados || baixando || quantidade === 0}>
-        {baixando ? 'Baixando…' : 'Baixar esta lista (CSV)'}
-      </button>
+        <button type="button" className="parados-baixar" onClick={baixar} disabled={!dados || baixando || quantidade === 0}>
+          {baixando ? 'Baixando…' : 'Baixar esta lista (CSV)'}
+        </button>
+      </div>
     </main>
   );
 }

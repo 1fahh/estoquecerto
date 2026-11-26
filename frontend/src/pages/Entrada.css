@@ -190,3 +190,73 @@
   font-size: 17px;
   font-weight: 800;
 }
+
+.entrada-corpo,
+.entrada-formulario {
+  display: contents;
+}
+
+@media (min-width: 900px) {
+  .entrada {
+    --page-max: 900px;
+    gap: 20px;
+  }
+
+  .entrada-corpo {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+  }
+
+  .entrada-formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .entrada .lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: 10px;
+  }
+
+  .entrada .lista > li {
+    min-width: 0;
+  }
+
+  .entrada .lista .lista-item.lista-item-botao {
+    min-height: 72px;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    background: var(--surface);
+  }
+
+  .entrada .lista .lista-item.lista-item-botao:hover {
+    border-color: var(--primary);
+  }
+}
+
+@media (min-width: 1100px) {
+  .entrada-corpo {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .entrada-cartao {
+    gap: 18px;
+  }
+
+  .entrada-comparacao {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .entrada-seta {
+    justify-self: center;
+    transform: rotate(90deg);
+  }
+}

@@ -81,59 +81,61 @@ export function ImportarCsv() {
         </button>
       </section>
 
-      <form className="importar-card importar-formulario" onSubmit={importar}>
-        <label className="importar-arquivo">
-          <Icon name="upload" size={24} />
-          <span className="importar-arquivo-texto">
-            {arquivo ? arquivo.name : 'Escolher arquivo CSV'}
-          </span>
-          {arquivo && (
-            <span className="texto-secundario">{Math.max(1, Math.round(arquivo.size / 1024))} KB</span>
-          )}
-          <input
-            type="file"
-            accept=".csv,text/csv"
-            onChange={(evento) => {
-              setArquivo(evento.target.files?.[0] ?? null);
-              setResultado(null);
-              setErro(null);
-            }}
-          />
-        </label>
+      <div className="importar-lado">
+        <form className="importar-card importar-formulario" onSubmit={importar}>
+          <label className="importar-arquivo">
+            <Icon name="upload" size={24} />
+            <span className="importar-arquivo-texto">
+              {arquivo ? arquivo.name : 'Escolher arquivo CSV'}
+            </span>
+            {arquivo && (
+              <span className="texto-secundario">{Math.max(1, Math.round(arquivo.size / 1024))} KB</span>
+            )}
+            <input
+              type="file"
+              accept=".csv,text/csv"
+              onChange={(evento) => {
+                setArquivo(evento.target.files?.[0] ?? null);
+                setResultado(null);
+                setErro(null);
+              }}
+            />
+          </label>
 
-        {erro && <p className="campo-erro" role="alert">{erro}</p>}
+          {erro && <p className="campo-erro" role="alert">{erro}</p>}
 
-        <button type="submit" className="btn btn-primario btn-bloco" disabled={!arquivo || enviando}>
-          {enviando ? 'Importando…' : 'Importar planilha'}
-        </button>
-      </form>
+          <button type="submit" className="btn btn-primario btn-bloco" disabled={!arquivo || enviando}>
+            {enviando ? 'Importando…' : 'Importar planilha'}
+          </button>
+        </form>
 
-      {resultado && (
-        <section className="importar-card importar-resultado" aria-live="polite">
-          <h2>
-            {resultado.criados === 1 ? '1 produto criado' : `${resultado.criados} produtos criados`}
-          </h2>
-          {resultado.ignorados.length === 0 ? (
-            <p className="texto-secundario">Todas as linhas foram importadas.</p>
-          ) : (
-            <>
-              <p className="texto-secundario">
-                {resultado.ignorados.length === 1
-                  ? '1 linha foi ignorada:'
-                  : `${resultado.ignorados.length} linhas foram ignoradas:`}
-              </p>
-              <ul className="importar-ignorados">
-                {resultado.ignorados.map((item) => (
-                  <li key={`${item.linha}-${item.motivo}`}>
-                    <strong>Linha {item.linha}</strong>
-                    <span>{item.motivo}</span>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-        </section>
-      )}
+        {resultado && (
+          <section className="importar-card importar-resultado" aria-live="polite">
+            <h2>
+              {resultado.criados === 1 ? '1 produto criado' : `${resultado.criados} produtos criados`}
+            </h2>
+            {resultado.ignorados.length === 0 ? (
+              <p className="texto-secundario">Todas as linhas foram importadas.</p>
+            ) : (
+              <>
+                <p className="texto-secundario">
+                  {resultado.ignorados.length === 1
+                    ? '1 linha foi ignorada:'
+                    : `${resultado.ignorados.length} linhas foram ignoradas:`}
+                </p>
+                <ul className="importar-ignorados">
+                  {resultado.ignorados.map((item) => (
+                    <li key={`${item.linha}-${item.motivo}`}>
+                      <strong>Linha {item.linha}</strong>
+                      <span>{item.motivo}</span>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </section>
+        )}
+      </div>
     </main>
   );
 }
